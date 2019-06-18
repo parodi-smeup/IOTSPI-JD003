@@ -1,11 +1,5 @@
-# VegaPlugin
-PLugin A37 per la gestione delle videocamere Vega
+IOTSPI-JD003
 
-# v1.0.0
-iotspi v1.0.0  
+JD003 Rpg Intepreted Plugin
 
-# v0.0.2
-iotspi v0.0.4
-
-
-
+First attempt to execute an RPG Interpreted program into an "A37 Sme.UP Plugin".
