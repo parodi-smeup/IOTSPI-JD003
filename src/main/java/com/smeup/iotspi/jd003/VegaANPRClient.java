@@ -1,4 +1,4 @@
-package com.smeup.IOTSPI_VegaANPR;
+package com.smeup.iotspi.jd003;
 
 import java.io.BufferedReader;
 import java.io.IOException;

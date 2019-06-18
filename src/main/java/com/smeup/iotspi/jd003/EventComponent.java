@@ -1,4 +1,4 @@
-package com.smeup.IOTSPI_VegaANPR;
+package com.smeup.iotspi.jd003;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
