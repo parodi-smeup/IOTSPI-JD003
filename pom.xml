@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.smeup</groupId>
-    <artifactId>IOTSPI-VegaANPR</artifactId>
+    <artifactId>IOTSPI-JD003</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>IOTSPI-VegaANPR</name>
+    <name>IOTSPI-JD003</name>
     <url>http://maven.apache.org</url>
 
     <properties>
