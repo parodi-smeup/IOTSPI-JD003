@@ -35,6 +35,21 @@
             <artifactId>iotspi</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+			<groupId>com.github.smeup.smeup-rpg</groupId>
+			<artifactId>rpgJavaInterpreter-core</artifactId>
+			<version>master-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.smeup.smeup-rpg</groupId>
+			<artifactId>examples</artifactId>
+			<version>master-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.smeup</groupId>
+			<artifactId>RPGasJAVA</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 
         <dependency>
             <groupId>junit</groupId>
