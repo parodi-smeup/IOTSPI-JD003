@@ -14,6 +14,7 @@ import com.smeup.rpgparser.jvminterop.JavaSystemInterface;
 import Smeup.smeui.iotspi.datastructure.interfaces.SezInterface;
 import Smeup.smeui.iotspi.datastructure.interfaces.SubConfInterface;
 import Smeup.smeui.iotspi.datastructure.interfaces.SubInterface;
+import Smeup.smeui.iotspi.datastructure.interfaces.SubMessageInterface;
 import Smeup.smeui.iotspi.datastructure.iotconnector.IoTConnectorConf;
 import Smeup.smeui.iotspi.datastructure.iotconnector.IoTConnectorInput;
 import Smeup.smeui.iotspi.datastructure.iotconnector.IoTConnectorResponse;
@@ -105,7 +106,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 		// This plug-in implements only ONE Sub. (get(0))
 		SubInterface sub = subList.get(0);
 		SubConfInterface subConf = sub.getConf();
-		String subId = sub.getId();
+		String subId = sub.getId();		
 		
 		// Table of all plugin-in tabella di tutte le variabili del plug-in
 		ArrayList<Hashtable<String, String>> subVarTable = subConf.getConfTable();
@@ -122,6 +123,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 			a37tags.append(createValueString("TpVar", subVarTable.get(i).get("TpVar")));
 			a37tags.append(createValueString("DftVal", subVarTable.get(i).get("DftVal")));
 			a37tags.append(createValueString("HowRead", subVarTable.get(i).get("HowRead")));
+			a37tags.append(createValueString("IO", calcolateIOVars(sub,subVarTable.get(i).get("Name"))));
 			a37tags.append("}");
 			if (i != subVarTable.size()-1) {
 				a37tags.append("|");
@@ -131,6 +133,23 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 		log(0, "a37tags: " + a37tags.toString());
 		
 		return a37tags.toString();
+	}
+	
+	// Calcolate if SUBVAR in MSGVAR is input or output
+	private String calcolateIOVars(SubInterface sub, String name) {
+	
+		SubMessageInterface subMsg = sub.getMessage();
+		ArrayList<Hashtable<String, String>> msgVarTable = subMsg.getConfTable();
+		String msgIO = "";
+		
+		for (int i = 0; i < msgVarTable.size(); i++) {
+				String msgNome = msgVarTable.get(i).get("Name");
+				if (msgNome.equals(name)) {
+					msgIO = msgVarTable.get(i).get("IO");
+					break;
+				}
+		}
+		return msgIO;
 	}
 	
 	// For create a name[value] string
