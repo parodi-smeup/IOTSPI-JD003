@@ -92,9 +92,14 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 		}
 	}
 	
+	/* Method to create a big string with all information of SUBVARS
+	 * 
+	 * idSub@valueName1{tagName1[valueTag1]tagname2[valueTag2].....}|
+	 * ....
+	 * valuename2{tagName1[valueTag1]tagname2[valueTag2].....}
+	*/
 	private String readSubVars(IoTConnectorConf configuration) {
 		
-		Hashtable<String,EventComponent> iEventList = new Hashtable<String,EventComponent>();
 		ArrayList<SubInterface> subList = configuration.getSubList();
 		
 		// This plug-in implements only ONE Sub. (get(0))
@@ -102,10 +107,11 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 		SubConfInterface subConf = sub.getConf();
 		String subId = sub.getId();
 		
-		//tabella di tutte le variabili del plug-in
+		// Table of all plugin-in tabella di tutte le variabili del plug-in
 		ArrayList<Hashtable<String, String>> subVarTable = subConf.getConfTable();
 		StringBuilder a37tags = new StringBuilder();
 		
+		a37tags.append(subId + "@");
 		
 		for (int i = 0; i < subVarTable.size(); i++) {
 			
@@ -121,6 +127,8 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 				a37tags.append("|");
 			}
 		}
+		
+		log(0, "a37tags: " + a37tags.toString());
 		
 		return a37tags.toString();
 	}
