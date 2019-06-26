@@ -74,6 +74,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 		parms.add(a37tags);
 		parms.add("");
 		response = callProgram(parms);
+		System.out.println("Response A37TAGS RPG method: " +response);
 		
 		parms.clear();
 		

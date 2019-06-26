@@ -9,6 +9,8 @@
      V* 25/06/19  V5R1   AD  Move entry from £INIZI to main
      V* 25/06/19  V5R1   AD  IERROR from Boolean to String
      V* 25/06/19  V5R1   AD  Remove boolean indicator (50) on call
+     V* 26/06/19  V5R1   AD  Add fun/met and change entry to handle LAO37_xx parameters
+     V* 26/06/19  V5R1   AD  Remove unused XML parse
      V*=====================================================================
      H/COPY QILEGEN,£INIZH
       *---------------------------------------------------------------
@@ -22,15 +24,8 @@
      D IERROR          S              1
       * XML
      D $XML            S          30000    VARYING
-      * Row
-     D $RIGA           S          30000    VARYING
-      * License plate
-     D $TARGA          S             50    VARYING
       *---------------------------------------------------------------
-     D                 DS
-     D $$SVAR                      1050    DIM(200)
-     D  $$SVARCD                     50    OVERLAY($$SVAR:1)                    Name
-     D  $$SVARVA                   1000    OVERLAY($$SVAR:*NEXT)                Value
+     D $$SVAR          S           4096
       *---------------------------------------------------------------
       * ENTRY
       * . Function
@@ -38,7 +33,7 @@
       * . Method
      D U$METO          S             10
       * . Array of Variables
-     D U$SVARSK        S                   LIKE($$SVAR) DIM(%ELEM($$SVAR))
+     D U$SVARSK        S                   LIKE($$SVAR)
       * . Return Code ('1'=ERROR / blank=OK)
      D U$IN35          S              1
       *---------------------------------------------------------------
@@ -48,11 +43,13 @@
       * . Method
      D §§METO          S             10
       * . Array of variables
-     D §§SVAR          S                   LIKE($$SVAR) DIM(%ELEM($$SVAR))
+     D §§SVAR          S                   LIKE($$SVAR)
       *---------------------------------------------------------------
      D ADDRSK          S             15
      D $X              S              5  0
      D $R              S              5  0
+     D A37TAGS         S           4096
+     D $$VAL           S             50
       *---------------------------------------------------------------
      D* M A I N
       *---------------------------------------------------------------
@@ -63,6 +60,9 @@
      C                   PARM                    U$SVARSK
      C                   PARM                    U$IN35
       *
+      * Log
+     C                   EVAL      $$VAL='Called JD_003 ' + U$SVARSK            COSTANTE
+     C                   DSPLY                   $$VAL
       * Initial settings
      C                   EXSR      IMP0
       *
@@ -89,61 +89,65 @@
       *--------------------------------------------------------------*
      C     FINZ          BEGSR
       *
-     C                   CLEAR                   ADDRSK
-1    C                   FOR       $X=1 TO %ELEM($$SVARCD)
-      * Get address to listen to the socket
-2    C                   IF        $$SVARCD($X)='PORT'
-     C                   EVAL      ADDRSK=$$SVARVA($X)
-     C                   LEAVE
-2e   C                   ENDIF
-1e   C                   ENDFOR
+1    C                   SELECT
+1x   C                   WHEN      U$METO='A37TAGS'
+     C                   EVAL      A37TAGS=$$SVAR
+      * Log
+     C                   EVAL      $$VAL='A37TAGS ' + A37TAGS
+     C                   DSPLY                   $$VAL
       *
-1    C                   IF        ADDRSK<>''
-2    C                   DO        *HIVAL
-     C                   CLEAR                   $TARGA
+1x   C                   WHEN      U$METO='POSTINIT'
+      * Get port to listen to the socket
+     C                   EVAL      ADDRSK=$$SVAR
+      * Log
+     C                   EVAL      $$VAL='POSTINT ' + ADDRSK
+     C                   DSPLY                   $$VAL
+      *
+2    C                   IF        ADDRSK<>''
+3    C                   DO        *HIVAL
       * I listen to the socket
      C                   CLEAR                   BUFFER
      C                   CLEAR                   BUFLEN
      C                   EVAL      IERROR=''
       *
-     C                   CALL      'JD_RCVSCK'
+     C                   CALL      'Jd_rcvsck'
      C                   PARM                    ADDRSK
      C                   PARM                    BUFFER
      C                   PARM                    BUFLEN
      C                   PARM                    IERROR
+      * Log
+     C                   EVAL      $$VAL='BUFFER ' + BUFFER
+     C                   DSPLY                   $$VAL
+      * Log
+     C                   EVAL      $$VAL='BUFLEN ' + %CHAR(BUFLEN)
+     C                   DSPLY                   $$VAL
+      * Log
+     C                   EVAL      $$VAL='IERROR ' + IERROR
+     C                   DSPLY                   $$VAL
       *
-3    C                   IF        IERROR<>''
+4    C                   IF        IERROR<>''
       * Socket error
      C                   EVAL      U$IN35='1'
      C                   LEAVE
-3x   C                   ELSE
+4x   C                   ELSE
       * If buffer received
-4    C                   IF        BUFLEN>0
+5    C                   IF        BUFLEN>0
      C                   EVAL      $XML=%SUBST(BUFFER:1:BUFLEN)
-      * Search Targa attribute (license plate)
-     C                   EVAL      $X=%SCAN('Targa="':$XML)
-5    C                   IF        $X>0
-     C                   EVAL      $RIGA=%SUBST($XML:$X+7)
-     C                   EVAL      $X=%SCAN('"':$RIGA)
-6    C                   IF        $X>0
-     C                   EVAL      $TARGA=%SUBST($RIGA:1:$X-1)
-7    C                   IF        $TARGA<>''
-      * Search first empty element of array
-     C                   EVAL      $R=%LOOKUP('':$$SVARCD)
-8    C                   IF        $R>0
-      * Return the license plate
-     C                   EVAL      $$SVARCD($R)='Targa'                         COSTANTE
-     C                   EVAL      $$SVARVA($R)=$TARGA
-     C                   EVAL      §§SVAR=$$SVAR
+     C                   EVAL      §§FUNZ='NFY'
+     C                   EVAL      §§METO='EVE'
+     C                   EVAL      §§SVAR=$XML
+      * Log
+     C                   EVAL      $$VAL='NFYEVE ' + $XML
+     C                   DSPLY                   $$VAL
+      * Log
+     C                   EVAL      $$VAL='NFYEVE ' + A37TAGS
+     C                   DSPLY                   $$VAL
       * Notify the event (the license plate)
-     C                   CALL      'JD_NFYEVE'
+     C                   CALL      'Jd_nfyeve'
      C                   PARM                    §§FUNZ
      C                   PARM                    §§METO
      C                   PARM                    §§SVAR
-8e   C                   ENDIF
-8e   C                   ENDIF
-7e   C                   ENDIF
-6e   C                   ENDIF
+     C                   PARM                    A37TAGS
 5e   C                   ENDIF
 4e   C                   ENDIF
       *
@@ -152,6 +156,8 @@
       * Empty address: Error
      C                   EVAL      U$IN35='1'
 2e   C                   ENDIF
+      *
+1e   C                   ENDSL
       *
      C                   ENDSR
       *--------------------------------------------------------------*
