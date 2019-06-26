@@ -45,25 +45,11 @@
 			<artifactId>examples</artifactId>
 			<version>master-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>com.smeup</groupId>
-			<artifactId>RPGasJAVA</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
-	    
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
         </dependency>
-
         <dependency>
             <groupId>jaxen</groupId>
             <artifactId>jaxen</artifactId>

@@ -2,7 +2,7 @@ package com.smeup.iotspi.jd003;
 
 import org.dom4j.Document;
 
-public class VegaANPRDataDocumentEvent {
+public class DataDocumentEvent {
 	
 	Document iDoc;
 	
