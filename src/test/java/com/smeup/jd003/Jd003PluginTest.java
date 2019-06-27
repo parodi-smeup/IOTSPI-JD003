@@ -10,7 +10,12 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.smeup.iotspi.jd003.Jd003Plugin;
@@ -31,6 +36,7 @@ public class Jd003PluginTest extends Thread{
 
 
 	@Test
+	@Ignore
 	public void test() {
 	
 		connectorConf.addSub(getSubInterfaceInstance());
@@ -42,37 +48,38 @@ public class Jd003PluginTest extends Thread{
 		System.out.println();
 	}
 	
-//	@Test
-//	public void test_openSocket() {
-//
-//		// wait the socket is up
-////		Thread.sleep(2000);
-//		
-//		final String address = "localhost";
-//		final int port = 8888;
-//		final String message = "Data send to: " + address +":"+ port;
-//		
-//	    Callable<String> callable = new Callable<String>() {
-//	        @Override
-//	        public String call() {
-//	        	connectorConf.addData("Port", "8888");
-//	    		connectorConf.addData("RpgSources", "src/test/resources/rpg/");
-//	    		
-//	    		jd003Plugin.postInit(sezInterface, connectorConf);
-//	        	
-//	    		return null;
-//	        }
-//	    };
-//	    
-//	    ExecutorService executor = Executors.newSingleThreadExecutor();
-//	    Future<String> future = executor.submit(callable);
-//	    
-//	    
-////	    writeSocket(address, port, message);
-//	
-//	    executor.shutdown();
-//		
-//	}
+	@Test
+	@Ignore
+	public void test_openSocket() throws UnknownHostException, IOException {
+
+		// wait the socket is up
+//		Thread.sleep(2000);
+		
+		final String address = "localhost";
+		final int port = 8888;
+		final String message = "Data send to: " + address +":"+ port;
+		
+	    Callable<String> callable = new Callable<String>() {
+	        @Override
+	        public String call() {
+	        	connectorConf.addData("Port", "8888");
+	    		connectorConf.addData("RpgSources", "src/test/resources/rpg/");
+	    		
+	    		jd003Plugin.postInit(sezInterface, connectorConf);
+	        	
+	    		return null;
+	        }
+	    };
+	    
+	    ExecutorService executor = Executors.newSingleThreadExecutor();
+	    Future<String> future = executor.submit(callable);
+	    
+	    
+	    writeSocket(address, port, message);
+	
+	    executor.shutdown();
+		
+	}
 	
 	
 	private void writeSocket(String address, int port, String message) throws UnknownHostException,IOException{
