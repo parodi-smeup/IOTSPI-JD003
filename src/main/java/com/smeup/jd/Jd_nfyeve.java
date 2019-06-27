@@ -157,7 +157,7 @@ public class Jd_nfyeve extends SPIIoTConnectorAdapter implements Program, DataDo
 			eventComponent.setIDataType(tpDato_value);
 			eventComponent.setIType(tpVar_value);
 			eventComponent.setIHowRead(howRead_value);
-			eventComponent.setIsMsgRet(Boolean.valueOf(iO_value));
+			eventComponent.setIsMsgRet(iO_value == "I" ? true : false);
 			eventComponent.setIDftValue(dftVal_value);
 			eventComponent.setIEventDesc(txt_value);
 

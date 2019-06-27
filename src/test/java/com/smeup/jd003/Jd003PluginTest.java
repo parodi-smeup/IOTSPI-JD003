@@ -199,35 +199,35 @@ public class Jd003PluginTest extends Thread{
 						
 						Hashtable<String, String> map1 = new Hashtable<String, String>();
 						map1.put("Name", "CAMERA");
-						map1.put("IO", "true");
+						map1.put("IO", "I");
 						
 						Hashtable<String, String> map2 = new Hashtable<String, String>();
 						map2.put("Name", "TARGA");
-						map2.put("IO", "true");
+						map2.put("IO", "I");
 						
 						Hashtable<String, String> map3 = new Hashtable<String, String>();
 						map3.put("Name", "DIREZIONE");
-						map3.put("IO", "true");
+						map3.put("IO", "I");
 						
 						Hashtable<String, String> map4 = new Hashtable<String, String>();
 						map4.put("Name", "SPEED");
-						map4.put("IO", "true");
+						map4.put("IO", "I");
 						
 						Hashtable<String, String> map5 = new Hashtable<String, String>();
 						map5.put("Name", "DATA");
-						map5.put("IO", "true");
+						map5.put("IO", "I");
 						
 						Hashtable<String, String> map6 = new Hashtable<String, String>();
 						map6.put("Name", "ORA");
-						map6.put("IO", "true");
+						map6.put("IO", "I");
 						
 						Hashtable<String, String> map7 = new Hashtable<String, String>();
 						map7.put("Name", "IMMAGINE");
-						map7.put("IO", "true");
+						map7.put("IO", "I");
 						
 						Hashtable<String, String> map8 = new Hashtable<String, String>();
 						map8.put("Name", "CMD");
-						map8.put("IO", "false");
+						map8.put("IO", "O");
 						
 						arr.add(map1);
 						arr.add(map2);
