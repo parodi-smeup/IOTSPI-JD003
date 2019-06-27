@@ -89,16 +89,13 @@ public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program, DataDo
 			arrayListResponse.add(entry.getValue());
 		}
 		
-		//§§FUNZ='INZ', §§METO='A37TAGS', §§SVAR=list of tags and their values 
-		if("INZ".equals(funz) &&
-			"A37TAGS".equals(meto)) {
-			final String a37tags = svar;
-			extractTags(a37tags);
-		}
-		
-		//§§FUNZ='NFY', §§METO='EVE', §§SVAR=XML from socket 
+		//§§FUNZ='NFY', §§METO='EVE', §§SVAR=XML from socket, A37TAGS=list of tags and their values 
 		if("NFY".equals(funz) &&
 			"EVE".equals(meto)) {
+			
+			final String a37tags = tags;
+			extractTags(a37tags);
+			
 			final String xml = svar;
 			String response = notifyEvent(xml);
 			arrayListResponse.add(2, new StringValue(response.trim()));
