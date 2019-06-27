@@ -70,7 +70,7 @@ public class JD_RCVSCK implements Program {
 		iError = "";
 		String addrsk = "";
 		String buffer = "";
-		String buflen = "";
+		Long buflen = 0L;
 		String ierror = "";
 		
 		for (Map.Entry<String, ? extends Value> entry : arg1.entrySet()) {
@@ -85,7 +85,7 @@ public class JD_RCVSCK implements Program {
 				buffer = entry.getValue().asString().getValue();
 				break;
 			case "BUFLEN":
-				buflen = entry.getValue().asString().getValue();
+				buflen = entry.getValue().asInt().getValue();
 				break;
 			case "IERROR":
 				ierror = entry.getValue().asString().getValue();
