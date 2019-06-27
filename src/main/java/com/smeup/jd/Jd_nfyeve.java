@@ -153,11 +153,14 @@ public class Jd_nfyeve extends SPIIoTConnectorAdapter implements Program, DataDo
 			}
 
 			EventComponent eventComponent = new EventComponent(a37SubId);
+			String msgLog = "EventName:" + name + " DataType:" + tpDato_value + " Type:" + tpVar_value + " HowRead:" + howRead_value + " MsgRet:" + iO_value + " DftValue:" + dftVal_value + " EventDesc:"  + txt_value;
+			log(0, msgLog);
+			System.out.println(msgLog);
 			eventComponent.setIEventName(name);
 			eventComponent.setIDataType(tpDato_value);
 			eventComponent.setIType(tpVar_value);
 			eventComponent.setIHowRead(howRead_value);
-			eventComponent.setIsMsgRet(iO_value == "I" ? true : false);
+			eventComponent.setIsMsgRet("I".equals(iO_value));
 			eventComponent.setIDftValue(dftVal_value);
 			eventComponent.setIEventDesc(txt_value);
 
@@ -175,7 +178,9 @@ public class Jd_nfyeve extends SPIIoTConnectorAdapter implements Program, DataDo
 
 	public void readData(Document aDoc) {
 		try {
-			log(0, "Metodo readData - Lettura buffer plugin");
+			String msgLog = "Metodo readData - Lettura buffer plugin";
+			log(0, msgLog);
+			System.out.println(msgLog);
 			// Alimento i vari TAG
 			for (String vKey : this.eventList.keySet()) {
 				EventComponent vEvtComp = this.eventList.get(vKey);
@@ -186,26 +191,41 @@ public class Jd_nfyeve extends SPIIoTConnectorAdapter implements Program, DataDo
 			// Creo evento - di default crea evento con tutte le variabili
 			createEvent();
 		} catch (Exception vEx) {
-			log(0, "Errore metodo readData - " + vEx.getMessage());
+			String msgLog = "Errore metodo readData - " + vEx.getMessage();
+			log(0, msgLog );
+			System.out.println(msgLog);
 		}
 	}
 
 	private synchronized void createEvent() {
+		String msgLog = "Metodo createEvent";
+		log(0, msgLog);
+		System.out.println(msgLog);
 		try {
 			// Crea SPIIOTEvent
 			SPIIoTEvent vEvent = new SPIIoTEvent(getA37SubId());
 			// Alimentazione struttura Event
+			msgLog = "Metodo createEvent: alimentazione struttura event (elementi lista eventi " + this.eventList.size() + ")" ;
+			log(0, msgLog);
+			System.out.println(msgLog);
 			for (String vKey : this.eventList.keySet()) {
 				EventComponent vEvtComp = this.eventList.get(vKey);
+				msgLog = " evento:" + vKey ;
+				log(0, msgLog);
+				System.out.println(msgLog);
 				// Ritorno solo le variabili non di tipo CMD
 				if (vEvtComp.getIsMsgRet())
 					vEvent.setData(vKey, vEvtComp.getIValue());
 			}
 			// invia Evento
-			log(0, "invio evento " + vEvent.getDataTable().toString());
+			msgLog = "invio evento (fireEventToSmeup)" + vEvent.getDataTable().toString();
+			log(0, msgLog);
+			System.out.println(msgLog);
 			fireEventToSmeup(vEvent);
 		} catch (Exception vEx) {
-			log(0, "Errore metodo createEvent- " + vEx.getMessage());
+			msgLog = "Errore metodo createEvent- " + vEx.getMessage();
+			log(0, msgLog);
+			System.out.println(msgLog);
 		}
 	}
 

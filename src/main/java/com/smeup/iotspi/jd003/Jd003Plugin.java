@@ -64,7 +64,17 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 			System.out.println(logMsg);
 			
 			socketPort = connectorConf.getData("Port");
-			rpgSourceName = configuration.getData("RpgSources").trim() + RPG_FILENAME;
+			if(null == configuration.getData("RpgSources") || "".equals(configuration.getData("RpgSources"))) {
+				rpgSourceName = "C:/rpgsources/" + RPG_FILENAME;
+				logMsg = "RpgSources var path not received, assume rpg: " + rpgSourceName;
+				log(0, logMsg);
+				System.out.println(logMsg);
+			}else {
+				rpgSourceName = configuration.getData("RpgSources").trim() + RPG_FILENAME;
+				logMsg = "RpgSources var path: " + rpgSourceName;
+				log(0, logMsg);
+				System.out.println(logMsg);
+			}
 		}
 
 		// Read variables SUBVAR from script SCP_SET.LOA38_JD1
