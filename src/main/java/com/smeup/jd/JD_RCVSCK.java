@@ -19,12 +19,12 @@ import com.smeup.rpgparser.interpreter.StringValue;
 import com.smeup.rpgparser.interpreter.SystemInterface;
 import com.smeup.rpgparser.interpreter.Value;
 
-public class Jd_rcvsck implements Program {
+public class JD_RCVSCK implements Program {
 
 	private List<ProgramParam> parms;
 	private String iError;
 
-	public Jd_rcvsck() {
+	public JD_RCVSCK() {
 		parms = new ArrayList<ProgramParam>();
 		// Socket address
 		parms.add(new ProgramParam("ADDRSK", new StringType(15)));

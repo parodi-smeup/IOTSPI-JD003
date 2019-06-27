@@ -26,13 +26,13 @@ import Smeup.smeui.iotspi.datastructure.iotconnector.IoTConnectorResponse;
 import Smeup.smeui.iotspi.interaction.SPIIoTConnectorAdapter;
 import Smeup.smeui.iotspi.interaction.SPIIoTEvent;
 
-public class Jd_nfyeve extends SPIIoTConnectorAdapter implements Program, DataDocumentListenerInterface {
+public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program, DataDocumentListenerInterface {
 
 	private List<ProgramParam> parms;
 	private Map<String, EventComponent> eventList = new HashMap<>();
 	private String a37SubId;
 
-	public Jd_nfyeve() {
+	public JD_NFYEVE() {
 		parms = new ArrayList<ProgramParam>();
 		// Sme.UP Function
 		parms.add(new ProgramParam("§§FUNZ", new StringType(15)));

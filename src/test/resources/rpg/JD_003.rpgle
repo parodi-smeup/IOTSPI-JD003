@@ -110,7 +110,7 @@
      C                   CLEAR                   BUFLEN
      C                   EVAL      IERROR=''
       *
-     C                   CALL      'Jd_rcvsck'
+     C                   CALL      'JD_RCVSCK'
      C                   PARM                    ADDRSK
      C                   PARM                    BUFFER
      C                   PARM                    BUFLEN
@@ -143,7 +143,7 @@
      C                   EVAL      $$VAL='NFYEVE ' + A37TAGS
      C                   DSPLY                   $$VAL
       * Notify the event (the license plate)
-     C                   CALL      'Jd_nfyeve'
+     C                   CALL      'JD_NFYEVE'
      C                   PARM                    §§FUNZ
      C                   PARM                    §§METO
      C                   PARM                    §§SVAR
