@@ -37,7 +37,9 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 	@Override
 	public boolean postInit(SezInterface sezInterface, IoTConnectorConf configuration) {
 		
-		log(0, "Called post-init " + getClass().getName());
+		String logMsg = "Called post-init " + getClass().getName();
+		log(0, logMsg);
+		System.out.println(logMsg);
 		
 		// sezInterface not used because cabled response
 		connectorConf = configuration;		
@@ -53,10 +55,16 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 		
 		// Read variables CNFSEZ from script SCP_SET.LOA38_JD1
 		if (configuration != null) {
+			logMsg = "Selected port: "+ connectorConf.getData("Port");
+			log(0, logMsg);
+			System.out.println(logMsg);
+			
+			logMsg = "Selected rpgSourceName: "+ configuration.getData("RpgSources") + RPG_FILENAME;
+			log(0, logMsg);
+			System.out.println(logMsg);
+			
 			socketPort = connectorConf.getData("Port");
 			rpgSourceName = configuration.getData("RpgSources").trim() + RPG_FILENAME;
-			log(0, "Selected port: "+ socketPort);
-			log(0, "Selected rpgSourceName: "+ rpgSourceName.trim());
 		}
 
 		// Read variables SUBVAR from script SCP_SET.LOA38_JD1
@@ -85,7 +93,9 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 		parms.add("");
 		response = callProgram(parms);
 		
-		log(0, "Program " + RPG_FILENAME + " exited with response: " + response);
+		logMsg = "Program " + RPG_FILENAME + " exited with response: " + response;
+		log(0, logMsg);
+		System.out.println(logMsg);
 		
 		if(response.equals("")) {
 			return false;
@@ -131,8 +141,10 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 			}
 		}
 		
-		log(0, "a37tags: " + a37tags.toString());
-		
+		String logMsg = "a37tags: " + a37tags.toString();
+		log(0, logMsg);
+		System.out.println(logMsg);
+
 		return a37tags.toString();
 	}
 	
@@ -160,7 +172,9 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 	
 	
 	private String callProgram(final List<String> parms) {
-		log(0, "Calling " + rpgSourceName + " with " + parms.size() + " parms: " + String.join(",", parms));
+		String logMsg = "Calling " + rpgSourceName + " with " + parms.size() + " parms: " + String.join(",", parms);
+		log(0, logMsg);
+		System.out.println(logMsg);
 		
 		commandLineProgram.singleCall(parms);
 		String response = new String(byteArrayOutputStream.toByteArray(), StandardCharsets.UTF_8);
