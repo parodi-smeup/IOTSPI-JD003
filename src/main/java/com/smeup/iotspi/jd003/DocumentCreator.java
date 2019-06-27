@@ -60,10 +60,7 @@ public class DocumentCreator{
 			msgLog = "...done";
 			System.out.println(msgLog);
 			
-			
 			fowardDataDocumentEvent(vDoc);
-			
-
 			
 			return;
 		}

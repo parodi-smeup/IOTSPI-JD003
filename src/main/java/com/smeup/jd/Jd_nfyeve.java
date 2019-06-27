@@ -61,30 +61,50 @@ public class Jd_nfyeve extends SPIIoTConnectorAdapter implements Program, DataDo
 		ArrayList<Value> arrayListResponse = new ArrayList<Value>();
 
 		String response = "";
+		String funz = "";
+		String meto = "";
+		String svar = "";
+		String tags = "";
 
+		//Receive parms (similar to *ENTRY PLIST RPG)
 		for (Map.Entry<String, ? extends Value> entry : arg1.entrySet()) {
 
 			String parmName = entry.getKey().toString();
 
 			switch (parmName) {
 			case "§§FUNZ":
-				arrayListResponse.add(entry.getValue());
+				funz = entry.getValue().asString().getValue();
 				break;
 			case "§§METO":
-				arrayListResponse.add(entry.getValue());
+				meto = entry.getValue().asString().getValue();
 				break;
 			case "§§SVAR":
-				final String xml = entry.getValue().asString().getValue();
-				response = notifyEvent(xml);
-				arrayListResponse.add(new StringValue(response.trim()));
+				svar = entry.getValue().asString().getValue();
 				break;
 			case "A37TAGS":
-				final String a37tags = entry.getValue().asString().getValue();
-				extractTags(a37tags);
-				arrayListResponse.add(entry.getValue());
+				tags = entry.getValue().asString().getValue();
 				break;
 			}
+
+			//all parms values as received
+			arrayListResponse.add(entry.getValue());
 		}
+		
+		//§§FUNZ='INZ', §§METO='A37TAGS', §§SVAR=list of tags and their values 
+		if("INZ".equals(funz) &&
+			"A37TAGS".equals(meto)) {
+			final String a37tags = svar;
+			extractTags(a37tags);
+		}
+		
+		//§§FUNZ='NFY', §§METO='EVE', §§SVAR=XML from socket 
+		if("NFY".equals(funz) &&
+			"EVE".equals(meto)) {
+			final String xml = svar;
+			response = notifyEvent(xml);
+			arrayListResponse.add(2, new StringValue(response.trim()));
+		}
+
 		return arrayListResponse;
 	}
 
