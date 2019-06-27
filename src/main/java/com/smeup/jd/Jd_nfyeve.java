@@ -60,7 +60,6 @@ public class Jd_nfyeve extends SPIIoTConnectorAdapter implements Program, DataDo
 	public List<Value> execute(SystemInterface arg0, LinkedHashMap<String, Value> arg1) {
 		ArrayList<Value> arrayListResponse = new ArrayList<Value>();
 
-		String response = "";
 		String funz = "";
 		String meto = "";
 		String svar = "";
@@ -101,7 +100,7 @@ public class Jd_nfyeve extends SPIIoTConnectorAdapter implements Program, DataDo
 		if("NFY".equals(funz) &&
 			"EVE".equals(meto)) {
 			final String xml = svar;
-			response = notifyEvent(xml);
+			String response = notifyEvent(xml);
 			arrayListResponse.add(2, new StringValue(response.trim()));
 		}
 

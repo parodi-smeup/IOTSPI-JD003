@@ -68,6 +68,10 @@ public class Jd_rcvsck implements Program {
 		String response = "";
 		int bufferLength = 0;
 		iError = "";
+		String addrsk = "";
+		String buffer = "";
+		String buflen = "";
+		String ierror = "";
 		
 		for (Map.Entry<String, ? extends Value> entry : arg1.entrySet()) {
 			
@@ -75,23 +79,35 @@ public class Jd_rcvsck implements Program {
 			
 			switch(parmName) {
 			case "ADDRSK":
-				String p = entry.getValue().asString().getValue();
-				int port = Integer.parseInt(p.trim());
-				response = listenSocket(port);
-				bufferLength = response.trim().length();
-				arrayListResponse.add(entry.getValue());
+				addrsk = entry.getValue().asString().getValue();
 				break;
 			case "BUFFER":
-				arrayListResponse.add(new StringValue(response.trim()));
+				buffer = entry.getValue().asString().getValue();
 				break;
 			case "BUFLEN":
-				arrayListResponse.add(new StringValue(String.valueOf(bufferLength)));
+				buflen = entry.getValue().asString().getValue();
 				break;
 			case "IERROR":
-				arrayListResponse.add(new StringValue(iError));
+				ierror = entry.getValue().asString().getValue();
 				break;
 			}
+			
+			//all parms values as received
+			arrayListResponse.add(entry.getValue());
+			
 		}
+		
+		//listen to socket 
+		int port = Integer.parseInt(addrsk.trim());
+		response = listenSocket(port);
+		
+		//response from socket content
+		arrayListResponse.add(1, new StringValue(response.trim()));
+		
+		//response length
+		bufferLength = response.trim().length();
+		arrayListResponse.add(2, new StringValue(String.valueOf(bufferLength)));
+		
 		return arrayListResponse;
 	}
 
