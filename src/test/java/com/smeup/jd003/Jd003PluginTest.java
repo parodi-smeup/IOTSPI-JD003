@@ -303,7 +303,7 @@ public class Jd003PluginTest extends Thread{
 						map4.put("HowRead", "TAG('SPEED');DIV(100)");
 						
 						Hashtable<String, String> map5 = new Hashtable<>();
-						map5.put("Name", "ORA");
+						map5.put("Name", "DATA");
 						map5.put("TpDato", "STRING");
 						map5.put("DftVal", "");
 						map5.put("Txt", "");
@@ -311,7 +311,7 @@ public class Jd003PluginTest extends Thread{
 						map5.put("HowRead", "TAG('DATE');DATE2DATE('yyyy-MM-dd','dd/MM/yyyy')");
 						
 						Hashtable<String, String> map6 = new Hashtable<>();
-						map6.put("Name", "IMMAGINE");
+						map6.put("Name", "ORA");
 						map6.put("TpDato", "STRING");
 						map6.put("DftVal", "");
 						map6.put("Txt", "");
@@ -319,12 +319,20 @@ public class Jd003PluginTest extends Thread{
 						map6.put("HowRead", "TAG('TIME');DATE2DATE('HH-mm-ss-SS','HH:mm:ss')");
 						
 						Hashtable<String, String> map7 = new Hashtable<>();
-						map7.put("Name", "CMD");
+						map7.put("Name", "IMMAGINE");
 						map7.put("TpDato", "STRING");
 						map7.put("DftVal", "");
 						map7.put("Txt", "");
-						map7.put("TpVar", "CMD");
+						map7.put("TpVar", "IN");
 						map7.put("HowRead", "CONCAT('\\\\172.31.0.59\\ftp_cam_targhe_erbusco\\');TAG('DATE');CONCAT('_');TAG('TIME');CONCAT('_');TAG('PLATE_STRING');CONCAT('.JPG')");
+						
+						Hashtable<String, String> map8 = new Hashtable<>();
+						map8.put("Name", "CMD");
+						map8.put("TpDato", "STRING");
+						map8.put("DftVal", "");
+						map8.put("Txt", "");
+						map8.put("TpVar", "CMD");
+						map8.put("HowRead", "");
 
 						arr.add(map1);
 						arr.add(map2);
@@ -333,6 +341,7 @@ public class Jd003PluginTest extends Thread{
 						arr.add(map5);
 						arr.add(map6);
 						arr.add(map7);
+						arr.add(map8);
 						return arr;
 					}
 				};
