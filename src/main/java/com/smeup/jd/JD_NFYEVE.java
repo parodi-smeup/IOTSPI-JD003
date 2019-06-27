@@ -90,8 +90,7 @@ public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program, DataDo
 		}
 		
 		//§§FUNZ='NFY', §§METO='EVE', §§SVAR=XML from socket, A37TAGS=list of tags and their values 
-		if("NFY".equals(funz) &&
-			"EVE".equals(meto)) {
+		if("NFY".equals(funz.trim()) && "EVE".equals(meto.trim())) {
 			
 			final String a37tags = tags;
 			extractTags(a37tags);
