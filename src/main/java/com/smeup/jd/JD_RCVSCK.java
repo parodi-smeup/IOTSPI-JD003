@@ -102,11 +102,11 @@ public class JD_RCVSCK implements Program {
 		response = listenSocket(port);
 		
 		//response from socket content
-		arrayListResponse.add(1, new StringValue(response.trim()));
+		arrayListResponse.set(1, new StringValue(response.trim()));
 		
 		//response length
 		bufferLength = response.trim().length();
-		arrayListResponse.add(2, new StringValue(String.valueOf(bufferLength)));
+		arrayListResponse.set(2, new StringValue(String.valueOf(bufferLength)));
 		
 		return arrayListResponse;
 	}

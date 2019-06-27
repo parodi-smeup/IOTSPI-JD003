@@ -98,7 +98,7 @@ public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program, DataDo
 			
 			final String xml = svar;
 			String response = notifyEvent(xml);
-			arrayListResponse.add(2, new StringValue(response.trim()));
+			arrayListResponse.set(2, new StringValue(response.trim()));
 		}
 
 		return arrayListResponse;
