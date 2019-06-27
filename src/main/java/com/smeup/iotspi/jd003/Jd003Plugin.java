@@ -20,7 +20,6 @@ import Smeup.smeui.iotspi.datastructure.iotconnector.IoTConnectorInput;
 import Smeup.smeui.iotspi.datastructure.iotconnector.IoTConnectorResponse;
 import Smeup.smeui.iotspi.interaction.SPIIoTConnectorAdapter;
 
-
 public class Jd003Plugin extends SPIIoTConnectorAdapter {
 	
 	private IoTConnectorConf connectorConf = null;
@@ -32,7 +31,6 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 	private JavaSystemInterface javaSystemInterface;
 	private ByteArrayOutputStream byteArrayOutputStream;
 	private PrintStream printStream;
-
 	
 	@Override
 	public boolean postInit(SezInterface sezInterface, IoTConnectorConf configuration) {
@@ -55,26 +53,15 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 		
 		// Read variables CNFSEZ from script SCP_SET.LOA38_JD1
 		if (configuration != null) {
-			logMsg = "Selected port: "+ connectorConf.getData("Port");
-			log(0, logMsg);
-			System.out.println(logMsg);
-			
-			logMsg = "Selected rpgSourceName: "+ configuration.getData("RpgSources") + RPG_FILENAME;
-			log(0, logMsg);
-			System.out.println(logMsg);
-			
 			socketPort = connectorConf.getData("Port");
-			if(null == configuration.getData("RpgSources") || "".equals(configuration.getData("RpgSources"))) {
-				rpgSourceName = "C:/rpgsources/" + RPG_FILENAME;
-				logMsg = "RpgSources var path not received, assume rpg: " + rpgSourceName;
-				log(0, logMsg);
-				System.out.println(logMsg);
-			}else {
-				rpgSourceName = configuration.getData("RpgSources").trim() + RPG_FILENAME;
-				logMsg = "RpgSources var path: " + rpgSourceName;
-				log(0, logMsg);
-				System.out.println(logMsg);
-			}
+			logMsg = "Selected port: "+ socketPort;
+			log(0, logMsg);
+			System.out.println(logMsg);
+			
+			rpgSourceName = configuration.getData("RpgSources").trim() + RPG_FILENAME;
+			logMsg = "Selected rpgSourceName: "+ rpgSourceName;
+			log(0, logMsg);
+			System.out.println(logMsg);
 		}
 
 		// Read variables SUBVAR from script SCP_SET.LOA38_JD1
@@ -180,7 +167,6 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 		return name + "[" + value + "]";
 	}
 	
-	
 	private String callProgram(final List<String> parms) {
 		String logMsg = "Calling " + rpgSourceName + " with " + parms.size() + " parms: " + String.join(",", parms);
 		log(0, logMsg);
@@ -192,8 +178,6 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 		
 		return response;
 	}
-	
-	
 	
 	@Override
 	public IoTConnectorResponse invoke(IoTConnectorInput aDataTable) {
@@ -212,6 +196,5 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 	
 }

@@ -34,7 +34,6 @@ public class Jd003PluginTest extends Thread{
 	private SezInterface sezInterface = null;
     private Jd003Plugin jd003Plugin = new Jd003Plugin();
 
-
 	@Test
 	@Ignore
 	public void test() {
@@ -73,7 +72,6 @@ public class Jd003PluginTest extends Thread{
 	    
 	    ExecutorService executor = Executors.newSingleThreadExecutor();
 	    Future<String> future = executor.submit(callable);
-	    
 	    
 	    writeSocket(address, port, message);
 	

@@ -45,19 +45,10 @@ public class Jd_nfyeve extends SPIIoTConnectorAdapter implements Program, DataDo
 	}
 
 	private String notifyEvent(final String xml) {
-		String responseAsString = "";
 		DocumentCreator reader = new DocumentCreator(xml.trim());
 		reader.addDataDocumentEventListener(this);
-		reader.start();
-		
-		//TODO remove sleep...
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		return responseAsString;
+		reader.run();
+		return "";
 	}
 
 	@Override
@@ -197,7 +188,7 @@ public class Jd_nfyeve extends SPIIoTConnectorAdapter implements Program, DataDo
 		}
 	}
 
-	private synchronized void createEvent() {
+	private void createEvent() {
 		String msgLog = "Metodo createEvent";
 		log(0, msgLog);
 		System.out.println(msgLog);
