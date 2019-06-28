@@ -35,7 +35,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 	@Override
 	public boolean postInit(SezInterface sezInterface, IoTConnectorConf configuration) {
 		
-		String logMsg = "Called post-init " + getClass().getName();
+		String logMsg = "Called post-init " + getClass().getName() + "(listeners: " + this.getListenerList().size() + ")";;
 		log(0, logMsg);
 		System.out.println(logMsg);
 		
