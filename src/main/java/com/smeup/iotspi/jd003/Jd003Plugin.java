@@ -48,7 +48,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 		
 		// load Jd_url commandLineProgram (a java programm called as an RPG from an interpreted
 		// RPG)
-		javaSystemInterface = new JavaSystemInterface(printStream);
+		javaSystemInterface = new MyJavaSystemInterface(printStream);
 		javaSystemInterface.addJavaInteropPackage("com.smeup.jd");
 		
 		// Read variables CNFSEZ from script SCP_SET.LOA38_JD1
