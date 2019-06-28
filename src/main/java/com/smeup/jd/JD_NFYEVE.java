@@ -1,5 +1,6 @@
 package com.smeup.jd;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -7,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;
+import org.xml.sax.InputSource;
 
 import com.smeup.iotspi.jd003.EventComponent;
-import com.smeup.iotspi.jd003.DataDocumentEvent;
-import com.smeup.iotspi.jd003.DataDocumentListenerInterface;
-import com.smeup.iotspi.jd003.DocumentCreator;
 import com.smeup.rpgparser.interpreter.Program;
 import com.smeup.rpgparser.interpreter.ProgramParam;
 import com.smeup.rpgparser.interpreter.StringType;
@@ -26,7 +27,7 @@ import Smeup.smeui.iotspi.datastructure.iotconnector.IoTConnectorResponse;
 import Smeup.smeui.iotspi.interaction.SPIIoTConnectorAdapter;
 import Smeup.smeui.iotspi.interaction.SPIIoTEvent;
 
-public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program, DataDocumentListenerInterface {
+public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program {
 
 	private List<ProgramParam> parms;
 	private Map<String, EventComponent> eventList = new HashMap<>();
@@ -45,9 +46,23 @@ public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program, DataDo
 	}
 
 	private String notifyEvent(final String xml) {
-		DocumentCreator reader = new DocumentCreator(xml.trim());
-		reader.addDataDocumentEventListener(this);
-		reader.run();
+		
+		String msgLog = "Create document from iResult:" + xml.trim();
+		System.out.println(msgLog);
+		
+		Document document= null;
+		SAXReader xmlReader = new SAXReader();
+		try {
+			document = xmlReader.read(new InputSource(new StringReader(xml.trim())));
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		}
+		
+		msgLog = "...done";
+		System.out.println(msgLog);
+		
+		createEvent(document);
+		
 		return "";
 	}
 
@@ -176,13 +191,7 @@ public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program, DataDo
 		return this.eventList;
 	}
 
-	@Override
-	public void menageEventDataDocument(DataDocumentEvent e) {
-		this.readData(e.getDataDocument());
-
-	}
-
-	public void readData(Document aDoc) {
+	public void createEvent(Document aDoc) {
 		try {
 			String msgLog = "Metodo readData - Lettura buffer plugin";
 			log(0, msgLog);
@@ -204,7 +213,7 @@ public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program, DataDo
 	}
 
 	private void createEvent() {
-		String msgLog = "Metodo createEvent";
+		String msgLog = "Metodo createEvent (listeners: " + this.getListenerList().size() + ")";
 		log(0, msgLog);
 		System.out.println(msgLog);
 		try {
