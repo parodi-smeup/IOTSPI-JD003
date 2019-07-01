@@ -7,11 +7,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import com.smeup.jd.JD_NFYEVE;
 import com.smeup.rpgparser.CommandLineProgram;
 import com.smeup.rpgparser.RunnerKt;
-import com.smeup.rpgparser.interpreter.Program;
-import com.smeup.rpgparser.jvminterop.JavaSystemInterface;
 
 import Smeup.smeui.iotspi.datastructure.interfaces.SezInterface;
 import Smeup.smeui.iotspi.datastructure.interfaces.SubConfInterface;
