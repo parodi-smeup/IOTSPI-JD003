@@ -30,7 +30,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 	private final String RPG_FILENAME = "JD_003.rpgle";
 	private String rpgSourceName = null;
 	private CommandLineProgram commandLineProgram;
-	private JavaSystemInterface javaSystemInterface;
+	private MyJavaSystemInterface javaSystemInterface;
 	private ByteArrayOutputStream byteArrayOutputStream;
 	private PrintStream printStream;
 	
@@ -52,8 +52,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 		// RPG)
 		javaSystemInterface = new MyJavaSystemInterface(printStream);
 		javaSystemInterface.addJavaInteropPackage("com.smeup.jd");
-		JD_NFYEVE jD_NFYEVE = new JD_NFYEVE(this);
-		javaSystemInterface.instantiateProgram(jD_NFYEVE.getClass());
+		javaSystemInterface.instantiateProgram(new JD_NFYEVE().getClass(), this);
 		
 		// Read variables CNFSEZ from script SCP_SET.LOA38_JD1
 		if (configuration != null) {

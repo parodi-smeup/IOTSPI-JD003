@@ -41,11 +41,6 @@ public class JD_NFYEVE implements Program {
 		// List of A37 attributes from script
 		parms.add(new ProgramParam("A37TAGS", new StringType(4096)));
 	}
-	
-	public JD_NFYEVE(final SPIIoTConnectorAdapter sPIIoTConnectorAdapter) {
-		this();
-		this.sPIIoTConnectorAdapter = sPIIoTConnectorAdapter;
-	}
 
 	private String notifyEvent(final String xml) {
 		
