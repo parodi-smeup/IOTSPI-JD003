@@ -20,18 +20,15 @@ import com.smeup.rpgparser.interpreter.StringValue;
 import com.smeup.rpgparser.interpreter.SystemInterface;
 import com.smeup.rpgparser.interpreter.Value;
 
-import Smeup.smeui.iotspi.datastructure.interfaces.SezInterface;
-import Smeup.smeui.iotspi.datastructure.iotconnector.IoTConnectorConf;
-import Smeup.smeui.iotspi.datastructure.iotconnector.IoTConnectorInput;
-import Smeup.smeui.iotspi.datastructure.iotconnector.IoTConnectorResponse;
 import Smeup.smeui.iotspi.interaction.SPIIoTConnectorAdapter;
 import Smeup.smeui.iotspi.interaction.SPIIoTEvent;
 
-public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program {
+public class JD_NFYEVE implements Program {
 
 	private List<ProgramParam> parms;
 	private Map<String, EventComponent> eventList = new HashMap<>();
 	private String a37SubId;
+	private SPIIoTConnectorAdapter sPIIoTConnectorAdapter;
 
 	public JD_NFYEVE() {
 		parms = new ArrayList<ProgramParam>();
@@ -43,6 +40,11 @@ public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program {
 		parms.add(new ProgramParam("§§SVAR", new StringType(210000)));
 		// List of A37 attributes from script
 		parms.add(new ProgramParam("A37TAGS", new StringType(4096)));
+	}
+	
+	public JD_NFYEVE(final SPIIoTConnectorAdapter sPIIoTConnectorAdapter) {
+		this();
+		this.sPIIoTConnectorAdapter = sPIIoTConnectorAdapter;
 	}
 
 	private String notifyEvent(final String xml) {
@@ -175,7 +177,7 @@ public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program {
 
 			EventComponent eventComponent = new EventComponent(a37SubId);
 			String msgLog = "EventName:" + name + " DataType:" + tpDato_value + " Type:" + tpVar_value + " HowRead:" + howRead_value + " MsgRet:" + iO_value + " DftValue:" + dftVal_value + " EventDesc:"  + txt_value;
-			log(0, msgLog);
+			getsPIIoTConnectorAdapter().log(0, msgLog);
 			System.out.println(msgLog);
 			eventComponent.setIEventName(name);
 			eventComponent.setIDataType(tpDato_value);
@@ -194,7 +196,7 @@ public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program {
 	public void createEvent(Document aDoc) {
 		try {
 			String msgLog = "Metodo readData - Lettura buffer plugin";
-			log(0, msgLog);
+			getsPIIoTConnectorAdapter().log(0, msgLog);
 			System.out.println(msgLog);
 			// Alimento i vari TAG
 			for (String vKey : this.eventList.keySet()) {
@@ -207,26 +209,26 @@ public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program {
 			createEvent();
 		} catch (Exception vEx) {
 			String msgLog = "Errore metodo readData - " + vEx.getMessage();
-			log(0, msgLog );
+			getsPIIoTConnectorAdapter().log(0, msgLog );
 			System.out.println(msgLog);
 		}
 	}
 
 	private void createEvent() {
-		String msgLog = "Metodo createEvent (listeners: " + this.getListenerList().size() + ")";
-		log(0, msgLog);
+		String msgLog = "Metodo createEvent (listeners: " + getsPIIoTConnectorAdapter().getListenerList().size() + ")";
+		getsPIIoTConnectorAdapter().log(0, msgLog);
 		System.out.println(msgLog);
 		try {
 			// Crea SPIIOTEvent
 			SPIIoTEvent vEvent = new SPIIoTEvent(getA37SubId());
 			// Alimentazione struttura Event
 			msgLog = "Metodo createEvent: alimentazione struttura event (elementi lista eventi " + this.eventList.size() + ")" ;
-			log(0, msgLog);
+			getsPIIoTConnectorAdapter().log(0, msgLog);
 			System.out.println(msgLog);
 			for (String vKey : this.eventList.keySet()) {
 				EventComponent vEvtComp = this.eventList.get(vKey);
 				msgLog = " evento:" + vKey ;
-				log(0, msgLog);
+				getsPIIoTConnectorAdapter().log(0, msgLog);
 				System.out.println(msgLog);
 				// Ritorno solo le variabili non di tipo CMD
 				if (vEvtComp.getIsMsgRet())
@@ -234,38 +236,14 @@ public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program {
 			}
 			// invia Evento
 			msgLog = "invio evento (fireEventToSmeup)" + vEvent.getDataTable().toString();
-			log(0, msgLog);
+			getsPIIoTConnectorAdapter().log(0, msgLog);
 			System.out.println(msgLog);
-			fireEventToSmeup(vEvent);
+			getsPIIoTConnectorAdapter().fireEventToSmeup(vEvent);
 		} catch (Exception vEx) {
 			msgLog = "Errore metodo createEvent- " + vEx.getMessage();
-			log(0, msgLog);
+			getsPIIoTConnectorAdapter().log(0, msgLog);
 			System.out.println(msgLog);
 		}
-	}
-
-	@Override
-	public IoTConnectorResponse invoke(IoTConnectorInput aDataTable) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean unplug() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean ping() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean postInit(SezInterface aSez, IoTConnectorConf aConfiguration) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	public String getA37SubId() {
@@ -274,6 +252,14 @@ public class JD_NFYEVE extends SPIIoTConnectorAdapter implements Program {
 
 	public void setA37SubId(String a37SubId) {
 		this.a37SubId = a37SubId;
+	}
+
+	public SPIIoTConnectorAdapter getsPIIoTConnectorAdapter() {
+		return sPIIoTConnectorAdapter;
+	}
+
+	public void setsPIIoTConnectorAdapter(SPIIoTConnectorAdapter sPIIoTConnectorAdapter) {
+		this.sPIIoTConnectorAdapter = sPIIoTConnectorAdapter;
 	}
 
 }

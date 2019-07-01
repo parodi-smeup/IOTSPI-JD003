@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import com.smeup.jd.JD_NFYEVE;
 import com.smeup.rpgparser.CommandLineProgram;
 import com.smeup.rpgparser.RunnerKt;
+import com.smeup.rpgparser.interpreter.Program;
 import com.smeup.rpgparser.jvminterop.JavaSystemInterface;
 
 import Smeup.smeui.iotspi.datastructure.interfaces.SezInterface;
@@ -50,6 +52,8 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter {
 		// RPG)
 		javaSystemInterface = new MyJavaSystemInterface(printStream);
 		javaSystemInterface.addJavaInteropPackage("com.smeup.jd");
+		JD_NFYEVE jD_NFYEVE = new JD_NFYEVE(this);
+		javaSystemInterface.instantiateProgram(jD_NFYEVE.getClass());
 		
 		// Read variables CNFSEZ from script SCP_SET.LOA38_JD1
 		if (configuration != null) {
