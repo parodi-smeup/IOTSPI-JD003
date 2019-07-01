@@ -9,11 +9,16 @@ import com.smeup.rpgparser.jvminterop.JavaSystemInterface;
 import Smeup.smeui.iotspi.interaction.SPIIoTConnectorAdapter;
 
 public class MyJavaSystemInterface extends JavaSystemInterface {
-	public MyJavaSystemInterface(PrintStream printStream) {
+	private SPIIoTConnectorAdapter sPIIoTConnectorAdapter;
+
+	public MyJavaSystemInterface(PrintStream printStream, SPIIoTConnectorAdapter sPIIoTConnectorAdapter) {
 		super(printStream);
+		this.sPIIoTConnectorAdapter = sPIIoTConnectorAdapter;
 	}
 
-	public Program instantiateProgram(Class<?> arg0, SPIIoTConnectorAdapter sPIIoTConnectorAdapter) {
+	@Override
+	public Program instantiateProgram(Class<?> arg0) {
+		//This method is called by the interpreter when it has to execute a call to a program implemented in Java
 		Program program = super.instantiateProgram(arg0);
 		if (program instanceof JD_NFYEVE) {
 			((JD_NFYEVE) program).setsPIIoTConnectorAdapter(sPIIoTConnectorAdapter);
