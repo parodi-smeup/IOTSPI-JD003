@@ -36,34 +36,45 @@ public class JD_RCVSCK implements Program {
 		parms.add(new ProgramParam("IERROR", new StringType(1)));
 	}
 
-	private String listenSocket(final int port) {
-		StringBuilder responseAsString = new StringBuilder();
-		try (ServerSocket serverSocket = new ServerSocket(port)) {
+	private String listenSocket(final int port) throws IOException {
+		StringBuilder responseAsString = null;
+		ServerSocket serverSocket = null;
+		Socket socket = null;
+		InputStream input = null;
+		BufferedReader reader = null;
+		try {
+			responseAsString = new StringBuilder();
+			serverSocket = new ServerSocket(port);
 			System.out.println("Socket listening on port " + port + "...");
-			Socket socket = serverSocket.accept();
+			socket = serverSocket.accept();
 			System.out.println("Client connected");
-			InputStream input = socket.getInputStream();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 			
-			// Reader string while buffer is not void
+			input = socket.getInputStream();
+			reader = new BufferedReader(new InputStreamReader(input));
 			String line;
-			while(reader.ready()) {
+			while (reader.ready()) {
 				line = reader.readLine();
-				if(null == line) {
+				if (null == line) {
 					break;
 				}
 				responseAsString.append(line + "\n");
-			}				
-			
+			}
+
 			reader.close();
+			input.close();
+			socket.close();
+			serverSocket.close();
 			
 			System.out.println("Client content written: " + responseAsString);
-			socket.close();
-			System.out.println("Socket closed");
 		} catch (IOException e) {
 			e.printStackTrace();
 			responseAsString.append("*ERROR " + e.getMessage());
 			iError = "1";
+		} finally {
+			reader.close();
+			input.close();
+			socket.close();
+			serverSocket.close();
 		}
 		return responseAsString.toString();
 	}
@@ -76,7 +87,7 @@ public class JD_RCVSCK implements Program {
 	@Override
 	public List<Value> execute(SystemInterface arg0, LinkedHashMap<String, Value> arg1) {
 		ArrayList<Value> arrayListResponse = new ArrayList<Value>();
-		
+
 		String response = "";
 		int bufferLength = 0;
 		iError = "";
@@ -84,12 +95,12 @@ public class JD_RCVSCK implements Program {
 		String buffer = "";
 		Long buflen = 0L;
 		String ierror = "";
-		
+
 		for (Map.Entry<String, ? extends Value> entry : arg1.entrySet()) {
-			
+
 			String parmName = entry.getKey().toString();
-			
-			switch(parmName) {
+
+			switch (parmName) {
 			case "ADDRSK":
 				addrsk = entry.getValue().asString().getValue();
 				break;
@@ -103,23 +114,28 @@ public class JD_RCVSCK implements Program {
 				ierror = entry.getValue().asString().getValue();
 				break;
 			}
-			
-			//all parms values as received
+
+			// all parms values as received
 			arrayListResponse.add(entry.getValue());
-			
+
 		}
-		
-		//listen to socket 
+
+		// listen to socket
 		int port = Integer.parseInt(addrsk.trim());
-		response = listenSocket(port);
-		
-		//response from socket content
+		try {
+			response = listenSocket(port);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// response from socket content
 		arrayListResponse.set(1, new StringValue(response.trim()));
-		
-		//response length
+
+		// response length
 		bufferLength = response.trim().length();
 		arrayListResponse.set(2, new StringValue(String.valueOf(bufferLength)));
-		
+
 		return arrayListResponse;
 	}
 
