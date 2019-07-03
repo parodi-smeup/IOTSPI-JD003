@@ -53,7 +53,7 @@ public class JD_RCVSCK implements Program {
 			responseAsString = "*ERROR " + e.getMessage();
 			iError = "1";
 		}
-		return responseAsString;
+		return responseAsString.toString();
 	}
 
 	@Override
