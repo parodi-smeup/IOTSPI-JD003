@@ -46,10 +46,16 @@ public class JD_RCVSCK implements Program {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 			
 			// Reader string while buffer is not void
-			String line = null;
-			while((line = reader.readLine()) != null) {
+			String line;
+			while(reader.ready()) {
+				line = reader.readLine();
+				if(null == line) {
+					break;
+				}
 				responseAsString.append(line + "\n");
-			}
+			}				
+			
+			reader.close();
 			
 			System.out.println("Client content written: " + responseAsString);
 			socket.close();
