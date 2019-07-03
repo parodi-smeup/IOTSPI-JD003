@@ -31,6 +31,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 	private ByteArrayOutputStream byteArrayOutputStream;
 	private PrintStream printStream;
 	private String a37tags;
+	private Thread t = null;
 
 	@Override
 	public boolean postInit(SezInterface sezInterface, IoTConnectorConf connectorConfiguration) {
@@ -67,7 +68,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 			System.out.println(logMsg);
 		}
 		
-		Thread t = new Thread(this);
+		t = new Thread(this);
 		t.start();
 
 		return true;
@@ -160,6 +161,9 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 	@Override
 	public boolean unplug() {
 		// TODO Auto-generated method stub
+		if(null != t) {
+			t.interrupt();
+		}
 		return false;
 	}
 
