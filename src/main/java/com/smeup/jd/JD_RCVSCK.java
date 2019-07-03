@@ -37,20 +37,26 @@ public class JD_RCVSCK implements Program {
 	}
 
 	private String listenSocket(final int port) {
-		String responseAsString = "";
+		StringBuilder responseAsString = new StringBuilder();
 		try (ServerSocket serverSocket = new ServerSocket(port)) {
 			System.out.println("Socket listening on port " + port + "...");
 			Socket socket = serverSocket.accept();
 			System.out.println("Client connected");
 			InputStream input = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-			responseAsString = reader.readLine();
+			
+			// Reader string while buffer is not void
+			String line = null;
+			while((line = reader.readLine()) != null) {
+				responseAsString.append(reader.readLine() + "\n");
+			}
+			
 			System.out.println("Client content written: " + responseAsString);
 			socket.close();
 			System.out.println("Socket closed");
 		} catch (IOException e) {
 			e.printStackTrace();
-			responseAsString = "*ERROR " + e.getMessage();
+			responseAsString.append("*ERROR " + e.getMessage());
 			iError = "1";
 		}
 		return responseAsString.toString();
