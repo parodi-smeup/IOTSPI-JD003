@@ -59,11 +59,6 @@ public class JD_RCVSCK implements Program {
 				}
 				responseAsString.append(line + "\n");
 			}
-
-			reader.close();
-			input.close();
-			socket.close();
-			serverSocket.close();
 			
 			System.out.println("Client content written: " + responseAsString);
 		} catch (IOException e) {
