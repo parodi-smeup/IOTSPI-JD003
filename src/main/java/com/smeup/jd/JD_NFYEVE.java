@@ -43,6 +43,7 @@ public class JD_NFYEVE implements Program {
 	}
 
 	private String notifyEvent(final String xml) {
+		String response = "";
 		
 		String msgLog = "Create document from iResult:" + xml.trim();
 		System.out.println(msgLog);
@@ -54,6 +55,7 @@ public class JD_NFYEVE implements Program {
 			document = xmlReader.read(new InputSource(new StringReader(xml.trim())));
 		} catch (DocumentException e) {
 			e.printStackTrace();
+			return response;
 		}
 		
 		msgLog = "...done";
@@ -62,7 +64,7 @@ public class JD_NFYEVE implements Program {
 		
 		createEvent(document);
 		
-		return "";
+		return response;
 	}
 
 	@Override
