@@ -32,6 +32,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 	private PrintStream printStream;
 	private String a37tags;
 	private Thread t = null;
+	private Boolean isAlive = true;
 
 	@Override
 	public boolean postInit(SezInterface sezInterface, IoTConnectorConf connectorConfiguration) {
@@ -67,7 +68,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 			log(0, logMsg);
 			System.out.println(logMsg);
 		}
-		
+
 		t = new Thread(this);
 		t.start();
 
@@ -161,9 +162,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 	@Override
 	public boolean unplug() {
 		// TODO Auto-generated method stub
-		if(null != t) {
-			t.interrupt();
-		}
+		isAlive = false;
 		return false;
 	}
 
@@ -176,34 +175,35 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 	@Override
 	public void run() {
 
-		// Read variables SUBVAR from script SCP_SET.LOA38_JD1
-		a37tags = readSubVars(connectorConf);
+		while (isAlive) {
+			// Read variables SUBVAR from script SCP_SET.LOA38_JD1
+			a37tags = readSubVars(connectorConf);
 
-		// Inizialize and call RPG Parser
-		commandLineProgram = RunnerKt.getProgram(rpgSourceName, javaSystemInterface);
-		commandLineProgram.setTraceMode(true);
+			// Inizialize and call RPG Parser
+			commandLineProgram = RunnerKt.getProgram(rpgSourceName, javaSystemInterface);
+			commandLineProgram.setTraceMode(true);
 
-		String response = null;
-		List<String> parms = new ArrayList<String>();
-		// Call JD003 A37TAGS method
-		parms.add("INZ");
-		parms.add("A37TAGS");
-		parms.add(a37tags);
-		parms.add("");
-		response = callProgram(parms);
-		System.out.println("Response A37TAGS RPG method: " + response);
+			String response = null;
+			List<String> parms = new ArrayList<String>();
+			// Call JD003 A37TAGS method
+			parms.add("INZ");
+			parms.add("A37TAGS");
+			parms.add(a37tags);
+			parms.add("");
+			response = callProgram(parms);
+			System.out.println("Response A37TAGS RPG method: " + response);
 
-		parms.clear();
+			parms.clear();
 
-		// Call JD003 POSTINIT method
-		parms.add("INZ");
-		parms.add("POSTINIT");
-		parms.add(socketPort);
-		parms.add("");
-		response = callProgram(parms);
+			// Call JD003 POSTINIT method
+			parms.add("INZ");
+			parms.add("POSTINIT");
+			parms.add(socketPort);
+			parms.add("");
+			response = callProgram(parms);
 
-		System.out.println("Program " + RPG_FILENAME);
-
+			System.out.println("Program " + RPG_FILENAME);
+		}
 	}
 
 }
