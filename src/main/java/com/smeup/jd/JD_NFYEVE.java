@@ -44,14 +44,14 @@ public class JD_NFYEVE implements Program {
 
 	private String notifyEvent(final String xml) {
 		
-		String msgLog = "Create document from iResult:" + xml;
+		String msgLog = "Create document from iResult:" + xml.trim();
 		System.out.println(msgLog);
 		getsPIIoTConnectorAdapter().log(0, msgLog);
 		
 		Document document= null;
 		SAXReader xmlReader = new SAXReader();
 		try {
-			document = xmlReader.read(new InputSource(new StringReader(xml)));
+			document = xmlReader.read(new InputSource(new StringReader(xml.trim())));
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		}
