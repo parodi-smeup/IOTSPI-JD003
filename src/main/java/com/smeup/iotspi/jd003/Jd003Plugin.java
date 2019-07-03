@@ -166,7 +166,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 	@Override
 	public boolean ping() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
