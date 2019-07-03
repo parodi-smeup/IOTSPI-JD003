@@ -48,7 +48,7 @@ public class JD_RCVSCK implements Program {
 			// Reader string while buffer is not void
 			String line = null;
 			while((line = reader.readLine()) != null) {
-				responseAsString.append(reader.readLine() + "\n");
+				responseAsString.append(line + "\n");
 			}
 			
 			System.out.println("Client content written: " + responseAsString);
