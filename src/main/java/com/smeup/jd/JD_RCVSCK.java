@@ -45,9 +45,8 @@ public class JD_RCVSCK implements Program {
 		BufferedReader reader = null;
 		try {
 			responseAsString = new StringBuilder();
-			serverSocket = new ServerSocket(port);
 			System.out.println("Socket listening on port " + port + "...");
-			socket = serverSocket.accept();
+			socket = this.serverSocket.accept();
 			System.out.println("Client connected");
 			
 			input = socket.getInputStream();
