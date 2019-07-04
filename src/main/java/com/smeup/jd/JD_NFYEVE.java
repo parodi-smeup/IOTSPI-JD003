@@ -54,6 +54,9 @@ public class JD_NFYEVE implements Program {
 		try {
 			document = xmlReader.read(new InputSource(new StringReader(xml.trim())));
 		} catch (DocumentException e) {
+			msgLog = "Error parsing xml:" + xml.trim();
+			System.out.println(msgLog);
+			getsPIIoTConnectorAdapter().log(0, msgLog);
 			e.printStackTrace();
 			return response;
 		}
@@ -74,6 +77,10 @@ public class JD_NFYEVE implements Program {
 
 	@Override
 	public List<Value> execute(SystemInterface arg0, LinkedHashMap<String, Value> arg1) {
+		String msgLog = "Executing JD_NFYEVE.execute(...)";
+		System.out.println(msgLog);
+		getsPIIoTConnectorAdapter().log(0, msgLog);
+		
 		ArrayList<Value> arrayListResponse = new ArrayList<Value>();
 
 		String funz = "";

@@ -34,17 +34,18 @@ public class Jd003PluginTest extends Thread{
 	private SezInterface sezInterface = null;
     private Jd003Plugin jd003Plugin = new Jd003Plugin();
 
-	@Test
-	@Ignore
-	public void test() {
+    @Test
+    @Ignore
+    public void test() throws InterruptedException {
 	
 		connectorConf.addSub(getSubInterfaceInstance());
-		connectorConf.addData("Port", "8888");
+		connectorConf.addData("Port", "1234");
 		connectorConf.addData("RpgSources", "src/test/resources/rpg/");
 		sezInterface = getSezInterfaceInstance();
 		
 		assertEquals(true, jd003Plugin.postInit(sezInterface, connectorConf));
-		System.out.println();
+		//sleep for debug
+		//Thread.sleep(1200000);
 	}
 	
 	@Test
@@ -55,13 +56,13 @@ public class Jd003PluginTest extends Thread{
 //		Thread.sleep(2000);
 		
 		final String address = "localhost";
-		final int port = 8888;
+		final int port = 1234;
 		final String message = "Data send to: " + address +":"+ port;
 		
 	    Callable<String> callable = new Callable<String>() {
 	        @Override
 	        public String call() {
-	        	connectorConf.addData("Port", "8888");
+	        	connectorConf.addData("Port", "1234");
 	    		connectorConf.addData("RpgSources", "src/test/resources/rpg/");
 	    		
 	    		jd003Plugin.postInit(sezInterface, connectorConf);

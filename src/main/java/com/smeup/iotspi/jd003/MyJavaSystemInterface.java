@@ -28,6 +28,7 @@ public class MyJavaSystemInterface extends JavaSystemInterface {
 			((JD_NFYEVE) program).setsPIIoTConnectorAdapter(sPIIoTConnectorAdapter);
 		}
 		if (program instanceof JD_RCVSCK) {
+			((JD_RCVSCK) program).setsPIIoTConnectorAdapter(sPIIoTConnectorAdapter);
 			((JD_RCVSCK) program).setServerSocket(serverSocket);
 		}
 		return program;

@@ -19,11 +19,14 @@ import com.smeup.rpgparser.interpreter.StringValue;
 import com.smeup.rpgparser.interpreter.SystemInterface;
 import com.smeup.rpgparser.interpreter.Value;
 
+import Smeup.smeui.iotspi.interaction.SPIIoTConnectorAdapter;
+
 public class JD_RCVSCK implements Program {
 
 	private List<ProgramParam> parms;
 	private String iError;
-	private ServerSocket serverSocket = null;
+	private ServerSocket serverSocket;
+	private SPIIoTConnectorAdapter sPIIoTConnectorAdapter;
 
 	public JD_RCVSCK() {
 		parms = new ArrayList<ProgramParam>();
@@ -38,6 +41,11 @@ public class JD_RCVSCK implements Program {
 	}
 
 	private String listenSocket(final int port) throws IOException {
+		
+		String msgLog = "Executing listenSocket(" +port+ ")";
+		System.out.println(msgLog);
+		getsPIIoTConnectorAdapter().log(0, msgLog);
+		
 		StringBuilder responseAsString = null;
 
 		Socket socket = null;
@@ -60,7 +68,10 @@ public class JD_RCVSCK implements Program {
 				responseAsString.append(line + "\n");
 			}
 			
-			System.out.println("Client content written: " + responseAsString);
+			msgLog = "Client content written: " + responseAsString;
+			System.out.println(msgLog);
+			getsPIIoTConnectorAdapter().log(0, msgLog);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			responseAsString.append("*ERROR " + e.getMessage());
@@ -81,6 +92,10 @@ public class JD_RCVSCK implements Program {
 
 	@Override
 	public List<Value> execute(SystemInterface arg0, LinkedHashMap<String, Value> arg1) {
+		String msgLog = "Executing JD_RCVSCK.execute(...)";
+		System.out.println(msgLog);
+		getsPIIoTConnectorAdapter().log(0, msgLog);
+		
 		ArrayList<Value> arrayListResponse = new ArrayList<Value>();
 
 		String response = "";
@@ -142,4 +157,11 @@ public class JD_RCVSCK implements Program {
 		this.serverSocket = serverSocket;
 	}
 
+	public SPIIoTConnectorAdapter getsPIIoTConnectorAdapter() {
+		return sPIIoTConnectorAdapter;
+	}
+
+	public void setsPIIoTConnectorAdapter(SPIIoTConnectorAdapter sPIIoTConnectorAdapter) {
+		this.sPIIoTConnectorAdapter = sPIIoTConnectorAdapter;
+	}
 }

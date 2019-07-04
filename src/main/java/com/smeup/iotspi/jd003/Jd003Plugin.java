@@ -35,6 +35,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 	private String a37tags;
 	private Thread t = null;
 	private Boolean isAlive = true;
+	private ServerSocket serverSocket = null;
 
 	@Override
 	public boolean postInit(SezInterface sezInterface, IoTConnectorConf connectorConfiguration) {
@@ -52,8 +53,6 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 		byteArrayOutputStream = new ByteArrayOutputStream();
 		printStream = new PrintStream(byteArrayOutputStream);
 
-
-
 		// Read variables CNFSEZ from script SCP_SET.LOA38_JD1
 		if (connectorConfiguration != null) {
 			socketPort = connectorConf.getData("Port");
@@ -67,21 +66,26 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 			System.out.println(logMsg);
 		}
 
-		// load Jd_url commandLineProgram (a java programm called as an RPG from an
-		// interpreted
-		// RPG)
 		try {
-			javaSystemInterface = new MyJavaSystemInterface(printStream, this, new ServerSocket(Integer.valueOf(socketPort)));
+			logMsg = "new ServerSocket on port: " + socketPort;
+			log(0, logMsg);
+			serverSocket = new ServerSocket(Integer.valueOf(socketPort));
+			logMsg = "new JavaSystemInterface...";
+			log(0, logMsg);
+			javaSystemInterface = new MyJavaSystemInterface(printStream, this, serverSocket);
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
+			logMsg = e.getMessage();
+			log(0, logMsg);
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			logMsg = e.getMessage();
+			log(0, logMsg);
 			e.printStackTrace();
 		}
 		javaSystemInterface.addJavaInteropPackage("com.smeup.jd");
-		
-		
+
 		t = new Thread(this);
 		t.start();
 
@@ -188,7 +192,14 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 	@Override
 	public void run() {
 
+		String logMsg = "New Thread started";
+		log(0, logMsg);
+		System.out.println(logMsg);
+
 		while (isAlive) {
+			logMsg = "Thread alive...";
+			log(0, logMsg);
+			System.out.println(logMsg);
 			// Read variables SUBVAR from script SCP_SET.LOA38_JD1
 			a37tags = readSubVars(connectorConf);
 
@@ -204,7 +215,10 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 			parms.add(a37tags);
 			parms.add("");
 			response = callProgram(parms);
-			System.out.println("Response A37TAGS RPG method: " + response);
+
+			logMsg = "Response A37TAGS RPG method: " + response;
+			log(0, logMsg);
+			System.out.println(logMsg);
 
 			parms.clear();
 
@@ -215,7 +229,9 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 			parms.add("");
 			response = callProgram(parms);
 
-			System.out.println("Program " + RPG_FILENAME);
+			logMsg = "Program " + RPG_FILENAME;
+			log(0, logMsg);
+			System.out.println(logMsg);
 		}
 	}
 
