@@ -44,7 +44,7 @@ public class JD_RCVSCK implements Program {
 		
 		String msgLog = "Executing listenSocket(" +port+ ")";
 		System.out.println(msgLog);
-		getsPIIoTConnectorAdapter().log(0, msgLog);
+		getsPIIoTConnectorAdapter().log(1, msgLog);
 		
 		StringBuilder responseAsString = null;
 
@@ -70,7 +70,7 @@ public class JD_RCVSCK implements Program {
 			
 			msgLog = "Client content written: " + responseAsString;
 			System.out.println(msgLog);
-			getsPIIoTConnectorAdapter().log(0, msgLog);
+			getsPIIoTConnectorAdapter().log(1, msgLog);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -94,7 +94,7 @@ public class JD_RCVSCK implements Program {
 	public List<Value> execute(SystemInterface arg0, LinkedHashMap<String, Value> arg1) {
 		String msgLog = "Executing JD_RCVSCK.execute(...)";
 		System.out.println(msgLog);
-		getsPIIoTConnectorAdapter().log(0, msgLog);
+		getsPIIoTConnectorAdapter().log(1, msgLog);
 		
 		ArrayList<Value> arrayListResponse = new ArrayList<Value>();
 

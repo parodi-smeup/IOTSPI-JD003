@@ -43,7 +43,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 		String logMsg = "Called post-init " + getClass().getName() + "(listeners: " + this.getListenerList().size()
 				+ ")";
 		;
-		log(0, logMsg);
+		log(1, logMsg);
 		System.out.println(logMsg);
 
 		// sezInterface not used because cabled response
@@ -57,31 +57,31 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 		if (connectorConfiguration != null) {
 			socketPort = connectorConf.getData("Port");
 			logMsg = "Selected port: " + socketPort;
-			log(0, logMsg);
+			log(1, logMsg);
 			System.out.println(logMsg);
 
 			rpgSourceName = connectorConfiguration.getData("RpgSources").trim() + RPG_FILENAME;
 			logMsg = "Selected rpgSourceName: " + rpgSourceName;
-			log(0, logMsg);
+			log(1, logMsg);
 			System.out.println(logMsg);
 		}
 
 		try {
 			logMsg = "new ServerSocket on port: " + socketPort;
-			log(0, logMsg);
+			log(1, logMsg);
 			serverSocket = new ServerSocket(Integer.valueOf(socketPort));
 			logMsg = "new JavaSystemInterface...";
-			log(0, logMsg);
+			log(1, logMsg);
 			javaSystemInterface = new MyJavaSystemInterface(printStream, this, serverSocket);
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			logMsg = e.getMessage();
-			log(0, logMsg);
+			log(1, logMsg);
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			logMsg = e.getMessage();
-			log(0, logMsg);
+			log(1, logMsg);
 			e.printStackTrace();
 		}
 		javaSystemInterface.addJavaInteropPackage("com.smeup.jd");
@@ -130,7 +130,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 		}
 
 		String logMsg = "a37tags: " + a37tags.toString();
-		log(0, logMsg);
+		log(1, logMsg);
 		System.out.println(logMsg);
 
 		return a37tags.toString();
@@ -160,7 +160,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 
 	private String callProgram(final List<String> parms) {
 		String logMsg = "Calling " + rpgSourceName + " with " + parms.size() + " parms: " + String.join(",", parms);
-		log(0, logMsg);
+		log(1, logMsg);
 		System.out.println(logMsg);
 
 		commandLineProgram.singleCall(parms);
@@ -201,12 +201,12 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 	public void run() {
 
 		String logMsg = "New Thread started";
-		log(0, logMsg);
+		log(1, logMsg);
 		System.out.println(logMsg);
 
 		while (isAlive) {
 			logMsg = "Thread alive...";
-			log(0, logMsg);
+			log(1, logMsg);
 			System.out.println(logMsg);
 			// Read variables SUBVAR from script SCP_SET.LOA38_JD1
 			a37tags = readSubVars(connectorConf);
@@ -225,7 +225,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 			response = callProgram(parms);
 
 			logMsg = "Response A37TAGS RPG method: " + response;
-			log(0, logMsg);
+			log(1, logMsg);
 			System.out.println(logMsg);
 
 			parms.clear();
@@ -238,7 +238,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 			response = callProgram(parms);
 
 			logMsg = "Program " + RPG_FILENAME;
-			log(0, logMsg);
+			log(1, logMsg);
 			System.out.println(logMsg);
 		}
 	}
