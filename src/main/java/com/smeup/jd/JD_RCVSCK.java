@@ -23,6 +23,7 @@ public class JD_RCVSCK implements Program {
 
 	private List<ProgramParam> parms;
 	private String iError;
+	private ServerSocket serverSocket = null;
 
 	public JD_RCVSCK() {
 		parms = new ArrayList<ProgramParam>();
@@ -38,7 +39,7 @@ public class JD_RCVSCK implements Program {
 
 	private String listenSocket(final int port) throws IOException {
 		StringBuilder responseAsString = null;
-		ServerSocket serverSocket = null;
+
 		Socket socket = null;
 		InputStream input = null;
 		BufferedReader reader = null;
@@ -69,7 +70,7 @@ public class JD_RCVSCK implements Program {
 			reader.close();
 			input.close();
 			socket.close();
-			serverSocket.close();
+			//serverSocket.close();
 		}
 		return responseAsString.toString();
 	}
@@ -132,6 +133,14 @@ public class JD_RCVSCK implements Program {
 		arrayListResponse.set(2, new StringValue(String.valueOf(bufferLength)));
 
 		return arrayListResponse;
+	}
+
+	public ServerSocket getServerSocket() {
+		return serverSocket;
+	}
+
+	public void setServerSocket(ServerSocket serverSocket) {
+		this.serverSocket = serverSocket;
 	}
 
 }

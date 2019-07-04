@@ -1,7 +1,9 @@
 package com.smeup.iotspi.jd003;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.net.ServerSocket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -50,11 +52,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 		byteArrayOutputStream = new ByteArrayOutputStream();
 		printStream = new PrintStream(byteArrayOutputStream);
 
-		// load Jd_url commandLineProgram (a java programm called as an RPG from an
-		// interpreted
-		// RPG)
-		javaSystemInterface = new MyJavaSystemInterface(printStream, this);
-		javaSystemInterface.addJavaInteropPackage("com.smeup.jd");
+
 
 		// Read variables CNFSEZ from script SCP_SET.LOA38_JD1
 		if (connectorConfiguration != null) {
@@ -69,6 +67,21 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 			System.out.println(logMsg);
 		}
 
+		// load Jd_url commandLineProgram (a java programm called as an RPG from an
+		// interpreted
+		// RPG)
+		try {
+			javaSystemInterface = new MyJavaSystemInterface(printStream, this, new ServerSocket(Integer.valueOf(socketPort)));
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		javaSystemInterface.addJavaInteropPackage("com.smeup.jd");
+		
+		
 		t = new Thread(this);
 		t.start();
 

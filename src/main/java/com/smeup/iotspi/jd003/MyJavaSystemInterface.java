@@ -1,8 +1,10 @@
 package com.smeup.iotspi.jd003;
 
 import java.io.PrintStream;
+import java.net.ServerSocket;
 
 import com.smeup.jd.JD_NFYEVE;
+import com.smeup.jd.JD_RCVSCK;
 import com.smeup.rpgparser.interpreter.Program;
 import com.smeup.rpgparser.jvminterop.JavaSystemInterface;
 
@@ -10,10 +12,12 @@ import Smeup.smeui.iotspi.interaction.SPIIoTConnectorAdapter;
 
 public class MyJavaSystemInterface extends JavaSystemInterface {
 	private SPIIoTConnectorAdapter sPIIoTConnectorAdapter;
+	private ServerSocket serverSocket;
 
-	public MyJavaSystemInterface(PrintStream printStream, SPIIoTConnectorAdapter sPIIoTConnectorAdapter) {
+	public MyJavaSystemInterface(PrintStream printStream, SPIIoTConnectorAdapter sPIIoTConnectorAdapter, ServerSocket serverSocket) {
 		super(printStream);
 		this.sPIIoTConnectorAdapter = sPIIoTConnectorAdapter;
+		this.serverSocket = serverSocket;
 	}
 
 	@Override
@@ -22,6 +26,9 @@ public class MyJavaSystemInterface extends JavaSystemInterface {
 		Program program = super.instantiateProgram(arg0);
 		if (program instanceof JD_NFYEVE) {
 			((JD_NFYEVE) program).setsPIIoTConnectorAdapter(sPIIoTConnectorAdapter);
+		}
+		if (program instanceof JD_RCVSCK) {
+			((JD_RCVSCK) program).setServerSocket(serverSocket);
 		}
 		return program;
 	}
