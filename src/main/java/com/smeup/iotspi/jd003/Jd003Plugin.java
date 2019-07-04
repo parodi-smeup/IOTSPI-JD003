@@ -180,6 +180,14 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 	public boolean unplug() {
 		// TODO Auto-generated method stub
 		isAlive = false;
+		if(null != this.serverSocket) {
+			try {
+				this.serverSocket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return false;
 	}
 
