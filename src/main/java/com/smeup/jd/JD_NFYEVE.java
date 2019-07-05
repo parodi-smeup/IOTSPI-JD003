@@ -14,6 +14,7 @@ import org.dom4j.io.SAXReader;
 import org.xml.sax.InputSource;
 
 import com.smeup.iotspi.jd003.EventComponent;
+import com.smeup.iotspi.jd003.LogLevel;
 import com.smeup.rpgparser.interpreter.Program;
 import com.smeup.rpgparser.interpreter.ProgramParam;
 import com.smeup.rpgparser.interpreter.StringType;
@@ -31,23 +32,8 @@ public class JD_NFYEVE implements Program {
 	private String a37SubId;
 	private SPIIoTConnectorAdapter sPIIoTConnectorAdapter;
 
-	public enum LOG_LEVEL {
-		DEBUG(0), INFO(10), ERROR(50);
-
-		private int level;
-
-		LOG_LEVEL(int level) {
-			this.level = level;
-		}
-
-		public int getLevel() {
-			return level;
-		}
-	}
-
-	private int logLevel = LOG_LEVEL.DEBUG.level;
+	private int logLevel = LogLevel.DEBUG.getLevel();
 	
-
 	public JD_NFYEVE() {
 		parms = new ArrayList<ProgramParam>();
 		// Sme.UP Function

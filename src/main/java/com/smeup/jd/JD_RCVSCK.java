@@ -2,8 +2,8 @@ package com.smeup.jd;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Timestamp;
@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.smeup.iotspi.jd003.LogLevel;
 import com.smeup.rpgparser.interpreter.NumberType;
 import com.smeup.rpgparser.interpreter.Program;
 import com.smeup.rpgparser.interpreter.ProgramParam;
@@ -29,22 +30,8 @@ public class JD_RCVSCK implements Program {
 	private String iError;
 	private ServerSocket serverSocket;
 	private SPIIoTConnectorAdapter sPIIoTConnectorAdapter;
-
-	public enum LOG_LEVEL {
-		DEBUG(0), INFO(10), ERROR(50);
-
-		private int level;
-
-		LOG_LEVEL(int level) {
-			this.level = level;
-		}
-
-		public int getLevel() {
-			return level;
-		}
-	}
-
-	private int logLevel = LOG_LEVEL.DEBUG.level;
+	
+	private int logLevel = LogLevel.DEBUG.getLevel();
 	
 	public JD_RCVSCK() {
 		parms = new ArrayList<ProgramParam>();
@@ -60,52 +47,47 @@ public class JD_RCVSCK implements Program {
 
 	private String listenSocket(final int port) {
 
-		String msgLog = "Executing listenSocket(" + port + ")";
+		String msgLog = getTime() + "Executing listenSocket(" + port + ")";
 		getsPIIoTConnectorAdapter().log(logLevel, msgLog);
-
-		StringBuilder responseAsString = null;
-		Socket socket = null;
-		InputStream input = null;
-		BufferedReader reader = null;
-
+		String responseAsString = "";
+		
 		try {
-			responseAsString = new StringBuilder();
-
 			msgLog = getTime() + "Socket listening on port " + port + "...";
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 
-			socket = this.serverSocket.accept();
-
-			socket.setSoTimeout(1000); // SAME AS VEGA PLUGIN (MONKEY COPY, DON'T KNOW WHY)
+			Socket socket = this.serverSocket.accept();
+			socket.setSoTimeout(5000); // SAME AS VEGA PLUGIN (MONKEY COPY, DON'T KNOW WHY)
 
 			msgLog = getTime() + "...client connected";
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 
-			input = socket.getInputStream();
-			reader = new BufferedReader(new InputStreamReader(input));
-			String line;
-			while (reader.ready()) {
-				line = reader.readLine();
-				if (null == line) {
-					break;
-				}
-				responseAsString.append(line + "\n");
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+			StringWriter stringWriter = new StringWriter();
+			char[] bufferSize = new char[1024 * 32];
+			int readed = 0;
+			int charNumber = 0;
+
+			while ((readed = bufferedReader.read(bufferSize)) != -1) {
+				stringWriter.write(bufferSize, 0, readed);
+				charNumber += readed;
 			}
+			responseAsString = stringWriter.toString().trim();
 
 			msgLog = getTime() + "Content written: " + responseAsString;
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 
-			socketAndInBufferDestroy(socket, reader);
+			socketAndInBufferDestroy(socket, bufferedReader);
 
 		} catch (IOException e) {
 			msgLog = getTime() + "IOException " + e.getMessage();
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 			e.printStackTrace();
-			responseAsString.append("*ERROR " + e.getMessage());
+			responseAsString = "*ERROR " + e.getMessage();
 			iError = "1";
 		}
 
-		return responseAsString.toString();
+		return responseAsString;
 	}
 
 	@Override
