@@ -41,13 +41,16 @@ public class EventComponent {
 	private int iDataType = EventComponent.STRING;
 
 	// Quando leggere l'evento di OUTPUT dal PLC
+	@SuppressWarnings("unused")
 	private int iWhenReadEvt = 10;
 	//indicatore stato attivo
 	private String iDftValue = "";
+	@SuppressWarnings("unused")
 	private String iEventId = "";
 	private String iEventName = "";
 	private String iEventDesc = "";
 	// Riferimento alla classe che gestisce  gli eventi in un Thread(Gruppo) Separato
+	@SuppressWarnings("unused")
 	private String iReqDelivGroup="";
 	private Hashtable<String,String[]> iHowRead = null;
 
@@ -122,6 +125,7 @@ public class EventComponent {
 		return iValue;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked", "unused" })
 	public void setIValue(Document aDoc) throws Exception {
 
 		Hashtable<String,String[]> vHowRead = iHowRead;
@@ -259,6 +263,7 @@ public class EventComponent {
 		}	
 	}
 
+	@SuppressWarnings({ "rawtypes", "unused" })
 	public void setICMD(String aValue) throws Exception {
 		HashMap vResult = new HashMap();
 		try

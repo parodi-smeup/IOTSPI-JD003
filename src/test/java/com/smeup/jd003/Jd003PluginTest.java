@@ -72,6 +72,7 @@ public class Jd003PluginTest extends Thread {
 		};
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
+		@SuppressWarnings("unused")
 		Future<String> future = executor.submit(callable);
 
 		writeSocket(address, port, message);
