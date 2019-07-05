@@ -49,7 +49,7 @@ public class JD_NFYEVE implements Program {
 	private String notifyEvent(final String xml) {
 		String response = "";
 		
-		String msgLog = getTime() + "Create document from iResult:" + xml.trim();
+		String msgLog = getTime() + " Create document from iResult:" + xml.trim();
 		getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 		
 		Document document= null;

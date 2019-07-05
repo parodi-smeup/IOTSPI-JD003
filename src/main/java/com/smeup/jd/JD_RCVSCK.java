@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -50,24 +51,29 @@ public class JD_RCVSCK implements Program {
 		String msgLog = getTime() + "Executing listenSocket(" + port + ")";
 		getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 		String responseAsString = "";
-		
+		Socket socket = null;
+		BufferedReader bufferedReader = null;
+		StringWriter stringWriter = new StringWriter();
 		try {
 			msgLog = getTime() + "Socket listening on port " + port + "...";
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 
-			Socket socket = this.serverSocket.accept();
-			socket.setSoTimeout(5000); // SAME AS VEGA PLUGIN (MONKEY COPY, DON'T KNOW WHY)
+			socket = this.serverSocket.accept();
 
 			msgLog = getTime() + "...client connected";
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-			StringWriter stringWriter = new StringWriter();
 			char[] bufferSize = new char[1024 * 32];
 			int readed = 0;
 			int charNumber = 0;
 
+			//TIMEOUT: serve perchè la telecamera non manda un carattere di fine (forse) quindi
+			//per terminare la lettura si attende 2s. poi viene lanciato il timeoutException e
+			//dentro al catch viene recuperato il contennuto della socket.
+			//Per me è SHIT.
+			socket.setSoTimeout(1000); // SAME AS VEGA PLUGIN (MONKEY COPY, DON'T KNOW WHY)
 			while ((readed = bufferedReader.read(bufferSize)) != -1) {
 				stringWriter.write(bufferSize, 0, readed);
 				charNumber += readed;
@@ -79,6 +85,17 @@ public class JD_RCVSCK implements Program {
 
 			socketAndInBufferDestroy(socket, bufferedReader);
 
+		} catch (SocketTimeoutException e) {
+			msgLog = getTime() + "SocketTimeoutException " + e.getMessage();
+			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
+			responseAsString = stringWriter.toString().trim();
+			try {
+				socketAndInBufferDestroy(socket, bufferedReader);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
 		} catch (IOException e) {
 			msgLog = getTime() + "IOException " + e.getMessage();
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
