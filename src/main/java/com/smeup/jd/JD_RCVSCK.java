@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -70,14 +71,14 @@ public class JD_RCVSCK implements Program {
 		try {
 			responseAsString = new StringBuilder();
 
-			msgLog = "Socket listening on port " + port + "...";
+			msgLog = getTime() + "Socket listening on port " + port + "...";
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 
 			socket = this.serverSocket.accept();
 
 			socket.setSoTimeout(1000); // SAME AS VEGA PLUGIN (MONKEY COPY, DON'T KNOW WHY)
 
-			msgLog = "...client connected";
+			msgLog = getTime() + "...client connected";
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 
 			input = socket.getInputStream();
@@ -91,13 +92,13 @@ public class JD_RCVSCK implements Program {
 				responseAsString.append(line + "\n");
 			}
 
-			msgLog = "Content written: " + responseAsString;
+			msgLog = getTime() + "Content written: " + responseAsString;
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 
 			socketAndInBufferDestroy(socket, reader);
 
 		} catch (IOException e) {
-			msgLog = "IOException " + e.getMessage();
+			msgLog = getTime() + "IOException " + e.getMessage();
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 			e.printStackTrace();
 			responseAsString.append("*ERROR " + e.getMessage());
@@ -115,7 +116,7 @@ public class JD_RCVSCK implements Program {
 	@SuppressWarnings("unused")
 	@Override
 	public List<Value> execute(SystemInterface arg0, LinkedHashMap<String, Value> arg1) {
-		String msgLog = "Executing JD_RCVSCK.execute(...)";
+		String msgLog = getTime() + "Executing JD_RCVSCK.execute(...)";
 		getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 
 		ArrayList<Value> arrayListResponse = new ArrayList<Value>();
@@ -189,5 +190,9 @@ public class JD_RCVSCK implements Program {
 		if (aClientSocket != null) {
 			aClientSocket.close();
 		}
+	}
+	
+	private static String getTime() {
+		return "[" + new Timestamp(System.currentTimeMillis()) + "] ";
 	}
 }
