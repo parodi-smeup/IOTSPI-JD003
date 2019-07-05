@@ -27,6 +27,11 @@ public class JD_RCVSCK implements Program {
 	private String iError;
 	private ServerSocket serverSocket;
 	private SPIIoTConnectorAdapter sPIIoTConnectorAdapter;
+	
+	private static final int DEBUG = 0;
+	private static final int INFO = 10;
+	private static final int ERROR = 50;	
+	private int logLevel = DEBUG;
 
 	public JD_RCVSCK() {
 		parms = new ArrayList<ProgramParam>();
@@ -40,22 +45,31 @@ public class JD_RCVSCK implements Program {
 		parms.add(new ProgramParam("IERROR", new StringType(1)));
 	}
 
-	private String listenSocket(final int port) throws IOException {
+	private String listenSocket(final int port){
 		
 		String msgLog = "Executing listenSocket(" +port+ ")";
 		System.out.println(msgLog);
-		getsPIIoTConnectorAdapter().log(1, msgLog);
+		getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 		
 		StringBuilder responseAsString = null;
-
 		Socket socket = null;
 		InputStream input = null;
 		BufferedReader reader = null;
+		
 		try {
 			responseAsString = new StringBuilder();
-			System.out.println("Socket listening on port " + port + "...");
+			
+			msgLog = "Socket listening on port " + port + "...";
+			System.out.println(msgLog);
+			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
+			
 			socket = this.serverSocket.accept();
-			System.out.println("Client connected");
+			
+			socket.setSoTimeout(1000); //SAME AS VEGA PLUGIN (MONKEY COPY, DON'T KNOW WHY)
+			
+			msgLog = "...client connected";
+			System.out.println(msgLog);
+			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 			
 			input = socket.getInputStream();
 			reader = new BufferedReader(new InputStreamReader(input));
@@ -68,20 +82,21 @@ public class JD_RCVSCK implements Program {
 				responseAsString.append(line + "\n");
 			}
 			
-			msgLog = "Client content written: " + responseAsString;
+			msgLog = "Content written: " + responseAsString;
 			System.out.println(msgLog);
-			getsPIIoTConnectorAdapter().log(1, msgLog);
+			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 
+			socketAndInBufferDestroy(socket, reader);
+			
 		} catch (IOException e) {
+			msgLog = "IOException " + e.getMessage();
+			System.out.println(msgLog);
+			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 			e.printStackTrace();
 			responseAsString.append("*ERROR " + e.getMessage());
 			iError = "1";
-		} finally {
-			reader.close();
-			input.close();
-			socket.close();
-			//serverSocket.close();
-		}
+		} 
+
 		return responseAsString.toString();
 	}
 
@@ -94,7 +109,7 @@ public class JD_RCVSCK implements Program {
 	public List<Value> execute(SystemInterface arg0, LinkedHashMap<String, Value> arg1) {
 		String msgLog = "Executing JD_RCVSCK.execute(...)";
 		System.out.println(msgLog);
-		getsPIIoTConnectorAdapter().log(1, msgLog);
+		getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 		
 		ArrayList<Value> arrayListResponse = new ArrayList<Value>();
 
@@ -132,12 +147,7 @@ public class JD_RCVSCK implements Program {
 
 		// listen to socket
 		int port = Integer.parseInt(addrsk.trim());
-		try {
-			response = listenSocket(port);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		response = listenSocket(port);
 
 		// response from socket content
 		arrayListResponse.set(1, new StringValue(response.trim()));
@@ -163,5 +173,14 @@ public class JD_RCVSCK implements Program {
 
 	public void setsPIIoTConnectorAdapter(SPIIoTConnectorAdapter sPIIoTConnectorAdapter) {
 		this.sPIIoTConnectorAdapter = sPIIoTConnectorAdapter;
+	}
+	
+	public void socketAndInBufferDestroy(Socket aClientSocket, BufferedReader aInBuffer) throws IOException{
+		if(aInBuffer != null){
+			aInBuffer.close();
+		}
+		if(aClientSocket != null){
+			aClientSocket.close();
+		}
 	}
 }

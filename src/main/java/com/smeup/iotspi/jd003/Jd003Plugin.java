@@ -42,7 +42,6 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 
 		String logMsg = "Called post-init " + getClass().getName() + "(listeners: " + this.getListenerList().size()
 				+ ")";
-		;
 		log(1, logMsg);
 		System.out.println(logMsg);
 

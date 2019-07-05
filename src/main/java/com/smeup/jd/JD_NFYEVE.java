@@ -29,6 +29,11 @@ public class JD_NFYEVE implements Program {
 	private Map<String, EventComponent> eventList = new HashMap<>();
 	private String a37SubId;
 	private SPIIoTConnectorAdapter sPIIoTConnectorAdapter;
+	
+	private static final int DEBUG = 0;
+	private static final int INFO = 10;
+	private static final int ERROR = 50;	
+	private int logLevel = DEBUG;
 
 	public JD_NFYEVE() {
 		parms = new ArrayList<ProgramParam>();
@@ -47,7 +52,7 @@ public class JD_NFYEVE implements Program {
 		
 		String msgLog = "Create document from iResult:" + xml.trim();
 		System.out.println(msgLog);
-		getsPIIoTConnectorAdapter().log(1, msgLog);
+		getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 		
 		Document document= null;
 		SAXReader xmlReader = new SAXReader();
@@ -56,14 +61,14 @@ public class JD_NFYEVE implements Program {
 		} catch (DocumentException e) {
 			msgLog = "Error parsing xml:" + xml.trim();
 			System.out.println(msgLog);
-			getsPIIoTConnectorAdapter().log(1, msgLog);
+			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 			e.printStackTrace();
 			return response;
 		}
 		
 		msgLog = "...done";
 		System.out.println(msgLog);
-		getsPIIoTConnectorAdapter().log(1, msgLog);
+		getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 		
 		createEvent(document);
 		
@@ -79,7 +84,7 @@ public class JD_NFYEVE implements Program {
 	public List<Value> execute(SystemInterface arg0, LinkedHashMap<String, Value> arg1) {
 		String msgLog = "Executing JD_NFYEVE.execute(...)";
 		System.out.println(msgLog);
-		getsPIIoTConnectorAdapter().log(1, msgLog);
+		getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 		
 		ArrayList<Value> arrayListResponse = new ArrayList<Value>();
 
@@ -183,7 +188,7 @@ public class JD_NFYEVE implements Program {
 
 			EventComponent eventComponent = new EventComponent(a37SubId);
 			String msgLog = "EventName:" + name + " DataType:" + tpDato_value + " Type:" + tpVar_value + " HowRead:" + howRead_value + " MsgRet:" + iO_value + " DftValue:" + dftVal_value + " EventDesc:"  + txt_value;
-			getsPIIoTConnectorAdapter().log(1, msgLog);
+			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 			System.out.println(msgLog);
 			eventComponent.setIEventName(name);
 			eventComponent.setIDataType(tpDato_value);
@@ -202,7 +207,7 @@ public class JD_NFYEVE implements Program {
 	public void createEvent(Document aDoc) {
 		try {
 			String msgLog = "Metodo readData - Lettura buffer plugin";
-			getsPIIoTConnectorAdapter().log(1, msgLog);
+			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 			System.out.println(msgLog);
 			// Alimento i vari TAG
 			for (String vKey : this.eventList.keySet()) {
@@ -215,26 +220,26 @@ public class JD_NFYEVE implements Program {
 			createEvent();
 		} catch (Exception vEx) {
 			String msgLog = "Errore metodo readData - " + vEx.getMessage();
-			getsPIIoTConnectorAdapter().log(1, msgLog );
+			getsPIIoTConnectorAdapter().log(logLevel, msgLog );
 			System.out.println(msgLog);
 		}
 	}
 
 	private void createEvent() {
 		String msgLog = "Metodo createEvent (listeners: " + getsPIIoTConnectorAdapter().getListenerList().size() + ")";
-		getsPIIoTConnectorAdapter().log(1, msgLog);
+		getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 		System.out.println(msgLog);
 		try {
 			// Crea SPIIOTEvent
 			SPIIoTEvent vEvent = new SPIIoTEvent(getA37SubId());
 			// Alimentazione struttura Event
 			msgLog = "Metodo createEvent: alimentazione struttura event (elementi lista eventi " + this.eventList.size() + ")" ;
-			getsPIIoTConnectorAdapter().log(1, msgLog);
+			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 			System.out.println(msgLog);
 			for (String vKey : this.eventList.keySet()) {
 				EventComponent vEvtComp = this.eventList.get(vKey);
 				msgLog = " evento:" + vKey ;
-				getsPIIoTConnectorAdapter().log(1, msgLog);
+				getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 				System.out.println(msgLog);
 				// Ritorno solo le variabili non di tipo CMD
 				if (vEvtComp.getIsMsgRet())
@@ -242,12 +247,12 @@ public class JD_NFYEVE implements Program {
 			}
 			// invia Evento
 			msgLog = "invio evento (fireEventToSmeup)" + vEvent.getDataTable().toString();
-			getsPIIoTConnectorAdapter().log(1, msgLog);
+			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 			System.out.println(msgLog);
 			getsPIIoTConnectorAdapter().fireEventToSmeup(vEvent);
 		} catch (Exception vEx) {
 			msgLog = "Errore metodo createEvent- " + vEx.getMessage();
-			getsPIIoTConnectorAdapter().log(1, msgLog);
+			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 			System.out.println(msgLog);
 		}
 	}
