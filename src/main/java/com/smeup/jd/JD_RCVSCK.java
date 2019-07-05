@@ -48,7 +48,6 @@ public class JD_RCVSCK implements Program {
 	private String listenSocket(final int port){
 		
 		String msgLog = "Executing listenSocket(" +port+ ")";
-		System.out.println(msgLog);
 		getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 		
 		StringBuilder responseAsString = null;
@@ -60,7 +59,6 @@ public class JD_RCVSCK implements Program {
 			responseAsString = new StringBuilder();
 			
 			msgLog = "Socket listening on port " + port + "...";
-			System.out.println(msgLog);
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 			
 			socket = this.serverSocket.accept();
@@ -68,7 +66,6 @@ public class JD_RCVSCK implements Program {
 			socket.setSoTimeout(1000); //SAME AS VEGA PLUGIN (MONKEY COPY, DON'T KNOW WHY)
 			
 			msgLog = "...client connected";
-			System.out.println(msgLog);
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 			
 			input = socket.getInputStream();
@@ -83,14 +80,12 @@ public class JD_RCVSCK implements Program {
 			}
 			
 			msgLog = "Content written: " + responseAsString;
-			System.out.println(msgLog);
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 
 			socketAndInBufferDestroy(socket, reader);
 			
 		} catch (IOException e) {
 			msgLog = "IOException " + e.getMessage();
-			System.out.println(msgLog);
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 			e.printStackTrace();
 			responseAsString.append("*ERROR " + e.getMessage());
@@ -108,7 +103,6 @@ public class JD_RCVSCK implements Program {
 	@Override
 	public List<Value> execute(SystemInterface arg0, LinkedHashMap<String, Value> arg1) {
 		String msgLog = "Executing JD_RCVSCK.execute(...)";
-		System.out.println(msgLog);
 		getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 		
 		ArrayList<Value> arrayListResponse = new ArrayList<Value>();
