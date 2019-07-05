@@ -24,15 +24,27 @@ import Smeup.smeui.iotspi.interaction.SPIIoTConnectorAdapter;
 public class JD_RCVSCK implements Program {
 
 	private List<ProgramParam> parms;
+	@SuppressWarnings("unused")
 	private String iError;
 	private ServerSocket serverSocket;
 	private SPIIoTConnectorAdapter sPIIoTConnectorAdapter;
-	
-	private static final int DEBUG = 0;
-	private static final int INFO = 10;
-	private static final int ERROR = 50;	
-	private int logLevel = DEBUG;
 
+	public enum LOG_LEVEL {
+		DEBUG(0), INFO(10), ERROR(50);
+
+		private int level;
+
+		LOG_LEVEL(int level) {
+			this.level = level;
+		}
+
+		public int getLevel() {
+			return level;
+		}
+	}
+
+	private int logLevel = LOG_LEVEL.DEBUG.level;
+	
 	public JD_RCVSCK() {
 		parms = new ArrayList<ProgramParam>();
 		// Socket address
@@ -45,29 +57,29 @@ public class JD_RCVSCK implements Program {
 		parms.add(new ProgramParam("IERROR", new StringType(1)));
 	}
 
-	private String listenSocket(final int port){
-		
-		String msgLog = "Executing listenSocket(" +port+ ")";
+	private String listenSocket(final int port) {
+
+		String msgLog = "Executing listenSocket(" + port + ")";
 		getsPIIoTConnectorAdapter().log(logLevel, msgLog);
-		
+
 		StringBuilder responseAsString = null;
 		Socket socket = null;
 		InputStream input = null;
 		BufferedReader reader = null;
-		
+
 		try {
 			responseAsString = new StringBuilder();
-			
+
 			msgLog = "Socket listening on port " + port + "...";
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
-			
+
 			socket = this.serverSocket.accept();
-			
-			socket.setSoTimeout(1000); //SAME AS VEGA PLUGIN (MONKEY COPY, DON'T KNOW WHY)
-			
+
+			socket.setSoTimeout(1000); // SAME AS VEGA PLUGIN (MONKEY COPY, DON'T KNOW WHY)
+
 			msgLog = "...client connected";
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
-			
+
 			input = socket.getInputStream();
 			reader = new BufferedReader(new InputStreamReader(input));
 			String line;
@@ -78,19 +90,19 @@ public class JD_RCVSCK implements Program {
 				}
 				responseAsString.append(line + "\n");
 			}
-			
+
 			msgLog = "Content written: " + responseAsString;
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 
 			socketAndInBufferDestroy(socket, reader);
-			
+
 		} catch (IOException e) {
 			msgLog = "IOException " + e.getMessage();
 			getsPIIoTConnectorAdapter().log(logLevel, msgLog);
 			e.printStackTrace();
 			responseAsString.append("*ERROR " + e.getMessage());
 			iError = "1";
-		} 
+		}
 
 		return responseAsString.toString();
 	}
@@ -100,11 +112,12 @@ public class JD_RCVSCK implements Program {
 		return parms;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public List<Value> execute(SystemInterface arg0, LinkedHashMap<String, Value> arg1) {
 		String msgLog = "Executing JD_RCVSCK.execute(...)";
 		getsPIIoTConnectorAdapter().log(logLevel, msgLog);
-		
+
 		ArrayList<Value> arrayListResponse = new ArrayList<Value>();
 
 		String response = "";
@@ -168,12 +181,12 @@ public class JD_RCVSCK implements Program {
 	public void setsPIIoTConnectorAdapter(SPIIoTConnectorAdapter sPIIoTConnectorAdapter) {
 		this.sPIIoTConnectorAdapter = sPIIoTConnectorAdapter;
 	}
-	
-	public void socketAndInBufferDestroy(Socket aClientSocket, BufferedReader aInBuffer) throws IOException{
-		if(aInBuffer != null){
+
+	public void socketAndInBufferDestroy(Socket aClientSocket, BufferedReader aInBuffer) throws IOException {
+		if (aInBuffer != null) {
 			aInBuffer.close();
 		}
-		if(aClientSocket != null){
+		if (aClientSocket != null) {
 			aClientSocket.close();
 		}
 	}

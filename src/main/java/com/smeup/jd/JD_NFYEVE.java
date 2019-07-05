@@ -29,11 +29,23 @@ public class JD_NFYEVE implements Program {
 	private Map<String, EventComponent> eventList = new HashMap<>();
 	private String a37SubId;
 	private SPIIoTConnectorAdapter sPIIoTConnectorAdapter;
+
+	public enum LOG_LEVEL {
+		DEBUG(0), INFO(10), ERROR(50);
+
+		private int level;
+
+		LOG_LEVEL(int level) {
+			this.level = level;
+		}
+
+		public int getLevel() {
+			return level;
+		}
+	}
+
+	private int logLevel = LOG_LEVEL.DEBUG.level;
 	
-	private static final int DEBUG = 0;
-	private static final int INFO = 10;
-	private static final int ERROR = 50;	
-	private int logLevel = DEBUG;
 
 	public JD_NFYEVE() {
 		parms = new ArrayList<ProgramParam>();
@@ -127,6 +139,7 @@ public class JD_NFYEVE implements Program {
 		return arrayListResponse;
 	}
 
+	@SuppressWarnings("unused")
 	private Map<String, EventComponent> extractTags(final String a37tags) {
 
 		setA37SubId(a37tags.split("@")[0]);
