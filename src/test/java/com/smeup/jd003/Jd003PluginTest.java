@@ -45,7 +45,7 @@ public class Jd003PluginTest extends Thread {
 
 		assertEquals(true, jd003Plugin.postInit(sezInterface, connectorConf));
 		// sleep for debug
-		// Thread.sleep(1200000);
+		Thread.sleep(1200000);
 	}
 
 	@Test
