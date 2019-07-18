@@ -55,7 +55,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 		byteArrayOutputStream = new ByteArrayOutputStream();
 		printStream = new PrintStream(byteArrayOutputStream);
 
-		// Read variables CNFSEZ from script SCP_SET.LOA38_JD1
+		// Read variables CNFSEZ from script SCP_SET.LOA37_JD3
 		if (connectorConfiguration != null) {
 			socketPort = connectorConf.getData("Port");
 			logMsg = getTime() + "Selected port: " + socketPort;
@@ -210,7 +210,7 @@ public class Jd003Plugin extends SPIIoTConnectorAdapter implements Runnable {
 			logMsg = getTime() + "Thread alive...";
 			log(logLevel, logMsg);
 			System.out.println(logMsg);
-			// Read variables SUBVAR from script SCP_SET.LOA38_JD1
+			// Read variables SUBVAR from script SCP_SET.LOA37_JD3
 			a37tags = readSubVars(connectorConf);
 
 			// Inizialize and call RPG Parser
