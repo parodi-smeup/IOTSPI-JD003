@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import com.smeup.rpgparser.CommandLineProgram;
-import com.smeup.rpgparser.RunnerKt;
+import com.smeup.rpgparser.execution.CommandLineProgram;
+import com.smeup.rpgparser.execution.RunnerKt;
 
 import Smeup.smeui.iotspi.datastructure.interfaces.SezInterface;
 import Smeup.smeui.iotspi.datastructure.interfaces.SubConfInterface;
